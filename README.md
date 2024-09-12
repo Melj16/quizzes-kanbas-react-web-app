@@ -1,4 +1,4 @@
-Website URL: [https://main--kanbasnortheastern.netlify.app/#/Labs/Lab1](url)
+[Website URL](https://main--kanbasnortheastern.netlify.app/#/Labs/Lab1)
 
 # Getting Started with Create React App
 
