@@ -14,9 +14,9 @@ export default function AssignmentControls() {
             </button>
             <span className="float-start">
                 <div className="input-group input-group-lg">
-                    <span className="input-group-text bg-transparent">
+                    <label htmlFor="wd-search-assignment" className="input-group-text bg-transparent">
                         <CiSearch className="position-relative" />
-                    </span>
+                    </label>
                     <input id="wd-search-assignment" type="text" 
                         className="form-control border border-left-0" placeholder="Search..." />
                 </div>
