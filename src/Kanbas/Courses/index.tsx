@@ -23,7 +23,7 @@ export default function Courses() {
             <Route path="Home" element={<Home />} />
             <Route path="Modules" element={<Modules />} />
             <Route path="Assignments" element={<Assignments />} />
-            <Route path="Assignments/:aid" element={<div style={{width: "600px"}}><AssignmentEditor /></div>} />
+            <Route path="Assignments/:aid" element={<div style={{width: "500px"}}><AssignmentEditor /></div>} />
             <Route path="People" element={<PeopleTable />} />
             </Routes>
         </div>

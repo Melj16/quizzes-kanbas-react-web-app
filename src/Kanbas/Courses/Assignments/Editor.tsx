@@ -21,13 +21,13 @@ export default function AssignmentEditor() {
             {/* Begin Grid */}
             <div className="container">
                 <div className="row form-group mb-3 text-dark">
-                    <label htmlFor="wd-points" className="col-5 form-label text-end">
+                    <label htmlFor="wd-points" className="col-4 form-label text-end">
                         Points
                     </label>
                     <input type="text" id="wd-points" className="col form-control" placeholder="100" />
                 </div>
                 <div className="row form-group mb-3 text-dark">
-                    <label htmlFor="wd-group" className="col-5 form-label text-end">
+                    <label htmlFor="wd-group" className="col-4 form-label text-end">
                         Assignment Group
                     </label>
                     <select name="wd-group" id="wd-group" className="col form-select">
@@ -37,7 +37,7 @@ export default function AssignmentEditor() {
                     </select>
                 </div>
                 <div className="row form-group mb-3 text-dark">
-                    <label htmlFor="wd-display-grade-as" className="col-5 form-label text-end">
+                    <label htmlFor="wd-display-grade-as" className="col-4 form-label text-end">
                         Display Grade as
                     </label>
                     <select name="wd-display-grade-as" id="wd-display-grade-as" className="col form-select">
@@ -47,7 +47,7 @@ export default function AssignmentEditor() {
                     </select>
                 </div>
                 <div className="row form-group mb-3 text-dark">
-                    <label htmlFor="wd-submission-type" className="col-5 form-label text-end">
+                    <label htmlFor="wd-submission-type" className="col-4 form-label text-end">
                         Submission Type
                     </label>
                     <div className="col border rounded-2">
@@ -92,10 +92,10 @@ export default function AssignmentEditor() {
                     </div>
                 </div>
                 <div className="row form-group mb-3 text-dark">
-                    <label htmlFor="wd-assign" className="col-5 form-label text-end">
+                    <label htmlFor="wd-assign" className="col-4 form-label text-end">
                         Assign
                     </label>
-                    <div className="col-7 border rounded-2">
+                    <div className="col border rounded-2">
                         <label className="form-check-label" htmlFor="wd-assign">
                             <strong>Assign to</strong>
                         </label>
@@ -126,8 +126,8 @@ export default function AssignmentEditor() {
             </div>
             <hr />
             <div className="d-flex float-end">
-                <button className="btn btn-light border text-secondary mx-2 form-control">Cancel</button>
-                <button className="btn btn-danger border border-dark form-control">Save</button>
+                <button className="btn btn-light border text-secondary mx-1">Cancel</button>
+                <button className="btn btn-danger border border-dark mx-1">Save</button>
             </div>
         </div>
     );

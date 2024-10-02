@@ -7,21 +7,21 @@ export default function Account() {
   return (
     <div id="wd-account-screen">
       <h2>Account</h2>
-      <table>
-        <tr>
-          <td valign="top">
-            <AccountNavigation />
-          </td>
-          <td valign="top">
-            <Routes>
-              <Route path="/" element={<Navigate to="/Kanbas/Account/Signin" />} />
-              <Route path="/Signin" element={<Signin />} />
-              <Route path="/Profile" element={<Profile />} />
-              <Route path="/Signup" element={<Signup />} />
-            </Routes>
-          </td>
-        </tr>
-      </table>
+      <hr />
+      <div className="d-flex">
+        <div className="d-none d-md-block me-3">
+          <AccountNavigation />
+        </div>
+        <Routes>
+          <Route path="/" element={<Navigate to="/Kanbas/Account/Signin" />} />
+          <Route path="/Signin"
+            element={<div style={{ width: "300px" }}><Signin /></div>} />
+          <Route path="/Profile" 
+            element={<div style={{ width: "300px" }}><Profile /></div>} />
+          <Route path="/Signup" 
+            element={<div style={{ width: "300px" }}><Signup /></div>} />
+        </Routes>
+      </div>
     </div>
   );
 }
