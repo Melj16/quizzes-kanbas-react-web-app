@@ -46,7 +46,7 @@ export default function Assignments() {
                 </a>
                 <p>
                   <span className="text-danger">Multiple Modules </span>
-                  |<b> Not available until</b> May 13 at 12:00am | <b>Due</b> May 20 at 11:59pm | 100 pts</p>
+                  <b> Not available until</b> May 13 at 12:00am | <b>Due</b> May 20 at 11:59pm | 100 pts</p>
               </div>
               <div className="align-content-center justify-content-end">
                 <LessonControlButtons />
