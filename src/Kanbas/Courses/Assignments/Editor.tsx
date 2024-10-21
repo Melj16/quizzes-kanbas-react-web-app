@@ -3,11 +3,10 @@ import * as db from "../../Database";
 import { Link } from "react-router-dom";
 export default function AssignmentEditor() {
     const { aid } = useParams();
-    const assignment = db.assignments.find((assignment) => assignment._id === aid); 
+    const assignment = db.assignments.find((assignment) => assignment._id === aid);
     const availableDate = new Date((assignment?.available) ? (assignment.available) : '');
     const untilDate = new Date((assignment?.until) ? (assignment.until) : '');
     const dueDate = new Date((assignment?.due) ? (assignment.due) : '');
-
     const { cid } = useParams();
     return (
         <div id="wd-assignments-editor">
@@ -132,11 +131,13 @@ export default function AssignmentEditor() {
             </div>
             <hr />
             <div className="d-flex float-end">
-                <Link to={""}>
+                <Link to={`/Kanbas/Courses/${cid}/Assignments`}>
                     <button className="btn btn-light border text-secondary mx-1">Cancel</button>
                 </Link>
-                <button className="btn btn-danger border border-dark mx-1">Save</button>
+                <Link to={`/Kanbas/Courses/${cid}/Assignments`}>
+                    <button className="btn btn-danger border border-dark mx-1">Save</button>
+                </Link>
             </div>
-        </div>
+        </div >
     );
 }
