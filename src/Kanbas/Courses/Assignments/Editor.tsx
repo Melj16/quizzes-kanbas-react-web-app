@@ -1,4 +1,13 @@
+import { useNavigate, useParams } from "react-router";
+import * as db from "../../Database";
+import { Link } from "react-router-dom";
 export default function AssignmentEditor() {
+    const { aid } = useParams();
+    const assignment = db.assignments.find((assignment) => assignment._id === aid);
+    const availableDate = new Date((assignment?.available) ? (assignment.available) : '');
+    const untilDate = new Date((assignment?.until) ? (assignment.until) : '');
+    const dueDate = new Date((assignment?.due) ? (assignment.due) : '');
+    const { cid } = useParams();
     return (
         <div id="wd-assignments-editor">
             <div className="form-group mb-3 ps-1">
@@ -6,16 +15,12 @@ export default function AssignmentEditor() {
                     Assignment Name
                 </label>
                 <input type="text" className="form-control"
-                    id="input1" placeholder="A1" />
+                    id="input1" value={assignment?.title} placeholder="A1" />
             </div>
             <div className="form-group mb-3 ps-1">
-                <textarea className="form-control wd-description" id="textarea1"
+                <textarea className="form-control wd-description" id="textarea1" placeholder="Assignment Description"
                     rows={10}>
-                    The assignment is available online Submit a link to the landing page of
-                    your Web application running on Netlify. The landing page should include
-                    the following: Your full name and section, Links to each of the lab assignments,
-                    Link to the Kanbas application, Links to all relevant source code repositories.
-                    The Kanbas application should include a link to navigate back to the landing page.
+                    {assignment?.description}
                 </textarea>
             </div>
             {/* Begin Grid */}
@@ -24,7 +29,7 @@ export default function AssignmentEditor() {
                     <label htmlFor="wd-points" className="col-4 form-label text-end">
                         Points
                     </label>
-                    <input type="text" id="wd-points" className="col form-control" placeholder="100" />
+                    <input type="text" id="wd-points" className="col form-control" value={assignment?.points} placeholder="100" />
                 </div>
                 <div className="row form-group mb-3 text-dark">
                     <label htmlFor="wd-group" className="col-4 form-label text-end">
@@ -106,19 +111,19 @@ export default function AssignmentEditor() {
                         <label className="form-check-label" htmlFor="wd-due-date">
                             <strong><small>Due</small></strong>
                         </label>
-                        <input type="date" id="wd-due-date" className="form-control mb-3" />
+                        <input type="date" id="wd-due-date" className="form-control mb-3" value={dueDate.toISOString().split('T')[0]} />
                         <div className="row">
                             <div className="col-sm-6 col-xs-12">
                                 <label htmlFor="wd-available-date">
                                     <strong><small>Available From</small></strong>
                                 </label>
-                                <input type="date" id="wd-available-date" className="form-control col mb-3" />
+                                <input type="date" id="wd-available-date" className="form-control col mb-3" value={availableDate.toISOString().split('T')[0]} />
                             </div>
                             <div className="col-sm-6 col-xs-12">
                                 <label htmlFor="wd-until-date">
                                     <strong><small>Until</small></strong>
                                 </label>
-                                <input type="date" id="wd-until-date" className="form-control col mb-3" />
+                                <input type="date" id="wd-until-date" className="form-control col mb-3" value={untilDate.toISOString().split('T')[0]} />
                             </div>
                         </div>
                     </div>
@@ -126,9 +131,13 @@ export default function AssignmentEditor() {
             </div>
             <hr />
             <div className="d-flex float-end">
-                <button className="btn btn-light border text-secondary mx-1">Cancel</button>
-                <button className="btn btn-danger border border-dark mx-1">Save</button>
+                <Link to={`/Kanbas/Courses/${cid}/Assignments`}>
+                    <button className="btn btn-light border text-secondary mx-1">Cancel</button>
+                </Link>
+                <Link to={`/Kanbas/Courses/${cid}/Assignments`}>
+                    <button className="btn btn-danger border border-dark mx-1">Save</button>
+                </Link>
             </div>
-        </div>
+        </div >
     );
 }
