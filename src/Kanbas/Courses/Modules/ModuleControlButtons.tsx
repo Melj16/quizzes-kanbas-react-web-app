@@ -10,7 +10,7 @@ export default function ModuleControlButtons(
         {
             moduleId: string;
             deleteModule: (moduleId: string) => void;
-            editModule: (moduleId: string) => void
+            editModule: (moduleId: string) => void;
         }
 ) {
     return (

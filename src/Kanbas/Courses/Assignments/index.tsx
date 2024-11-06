@@ -1,14 +1,12 @@
 import { BsGripVertical } from "react-icons/bs";
 import AssignmentControls from "./AssignmentControls";
-import LessonControlButtons from "../Modules/LessonControlButtons";
 import { MdOutlineAssignment } from "react-icons/md";
 import AssignmentControlButtons from "./AssignmentControlButtons";
-import { assignments } from "../../Database";
 import { useParams } from "react-router";
-import * as db from "../../Database";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
-import { addAssignment } from "./reducer";
+import AssignmentLessonControlButtons from "./AssignmentLessonControlButtons";
+import { deleteAssignment } from "./reducer";
+import AssignmentDeleteConfirmation from "./AssignmentDeleteConfirmation";
 
 export default function Assignments() {
   const { cid } = useParams();
@@ -40,15 +38,19 @@ export default function Assignments() {
                     <p>
                       <span className="text-danger">Multiple Modules </span>
                       <b> Not available until </b>
-                      {new Date(a.available).toDateString().split(' ').slice(1).join(' ')}
-                      &nbsp;at {new Date(a.available).toLocaleTimeString('en-US')}
-                      &nbsp;| <b>Due</b> {new Date(a.due).toDateString().split(' ').slice(1).join(' ')}
-                      &nbsp;at {new Date(a.due).toLocaleTimeString('en-US')}
+                      {new Date(a.available.replace(/-/g, '\/').replace(/T.+/, '')).toDateString().split(' ').slice(1).join(' ')}
+                      &nbsp;| <b>Due</b> {new Date(a.due.replace(/-/g, '\/').replace(/T.+/, '')).toDateString().split(' ').slice(1).join(' ')}
                       &nbsp;| {a.points || 0} pts
                     </p>
                   </div>
                   <div className="align-content-center justify-content-end">
-                    <LessonControlButtons />
+                    <AssignmentLessonControlButtons
+                      assignmentName={a.title}
+                      assignmentId={a._id}
+                      deleteAssignment={(assignmentId) => {
+                        dispatch(deleteAssignment(assignmentId));
+                      }}
+                    />
                   </div>
                 </li>))
             }
