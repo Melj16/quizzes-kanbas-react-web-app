@@ -6,11 +6,11 @@ import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import AssignmentLessonControlButtons from "./AssignmentLessonControlButtons";
 import { deleteAssignment } from "./reducer";
-import AssignmentDeleteConfirmation from "./AssignmentDeleteConfirmation";
 
 export default function Assignments() {
   const { cid } = useParams();
   const { assignments } = useSelector((state: any) => state.assignmentReducer);
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
   const dispatch = useDispatch();
   return (
     <div id="wd-assignments">
@@ -31,10 +31,14 @@ export default function Assignments() {
                     <MdOutlineAssignment className="text-success me-2 fs-3" />
                   </div>
                   <div className="flex-grow-1 px-2">
-                    <a className="wd-assignment-link link-dark text-decoration-none"
-                      href={`#/Kanbas/Courses/${cid}/Assignments/${a._id}`}>
-                      <b>{a.title}{console.log(a.title)}</b>
-                    </a>
+                    {currentUser.role === "FACULTY" ? (
+                      <a className="wd-assignment-link link-dark text-decoration-none"
+                        href={`#/Kanbas/Courses/${cid}/Assignments/${a._id}`}>
+                        <b>{a.title}</b>
+                      </a>
+                    ) : (
+                      <b>{a.title}</b>
+                    )}
                     <p>
                       <span className="text-danger">Multiple Modules </span>
                       <b> Not available until </b>
