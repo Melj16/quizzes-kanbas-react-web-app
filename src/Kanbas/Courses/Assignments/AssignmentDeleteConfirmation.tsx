@@ -12,7 +12,7 @@ export default function AssignmentDeleteConfirmation(
                         <button type="button" className="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div className="modal-body">
-                        Are you sure you want to delete Assignment {assignmentName}?
+                        Are you sure you want to delete {assignmentName}?
                     </div>
                     <div className="modal-footer">
                         <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
