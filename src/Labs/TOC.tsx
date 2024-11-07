@@ -1,42 +1,30 @@
 import { useLocation } from "react-router";
 
 export default function TOC() {
-    const { pathname } = useLocation();
-    return (
-      <ul className="nav nav-pills">
+  const { pathname } = useLocation();
+  const links = [
+    { label: "Lab 1", path: "#/Labs/Lab1"},
+    { label: "Lab 2", path: "#/Labs/Lab2"},
+    { label: "Lab 3", path: "#/Labs/Lab3"},
+    { label: "Lab 4", path: "#/Labs/Lab4"},
+    { label: "Kanbas", path: "#/Kanbas"},
+    { label: "My Github", path: "https://github.com/Melj16/kanbas-react-web-app"}
+  ];
+  return (
+    <ul className="nav nav-pills">
+      <li className="nav-item">
+        <a id="wd-a" href="#/Labs" className="nav-link">
+          Labs
+        </a>
+      </li>
+      {links.map((link) => (
         <li className="nav-item">
-          <a id="wd-a" href="#/Labs" className="nav-link">
-            Labs
+          <a href={link.path}
+            className={`nav-link ${pathname.includes(link.label.replaceAll(" ","")) ? "active" : ""}`}>
+            {link.label}
           </a>
         </li>
-        <li className="nav-item">
-          <a id="wd-a1" href="#/Labs/Lab1"
-            className={`nav-link ${pathname.includes("Lab1") ? "active" : ""}`}>
-            Lab 1
-          </a>
-        </li>
-        <li className="nav-item">
-          <a id="wd-a2" href="#/Labs/Lab2"
-            className={`nav-link ${pathname.includes("Lab2") ? "active" : ""}`}>
-            Lab 2
-          </a>
-        </li>
-        <li className="nav-item">
-          <a id="wd-a3" href="#/Labs/Lab3"
-            className={`nav-link ${pathname.includes("Lab3") ? "active" : ""}`}>
-            Lab 3
-          </a>
-        </li>
-        <li className="nav-item">
-          <a id="wd-kanbas" href="#/Kanbas" className="nav-link">
-            Kanbas
-          </a>
-        </li>
-        <li className="nav-item">
-          <a id="wd-github" href="https://github.com/Melj16/kanbas-react-web-app" target="_blank" className="nav-link">
-            My GitHub
-          </a>
-        </li>
-      </ul>
-    );
-  }
+      ))}
+    </ul>
+  );
+}
