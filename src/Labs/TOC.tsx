@@ -7,6 +7,7 @@ export default function TOC() {
     { label: "Lab 2", path: "#/Labs/Lab2"},
     { label: "Lab 3", path: "#/Labs/Lab3"},
     { label: "Lab 4", path: "#/Labs/Lab4"},
+    { label: "Lab 5", path: "#/Labs/Lab5"},
     { label: "Kanbas", path: "#/Kanbas"},
     { label: "My Github", path: "https://github.com/Melj16/kanbas-react-web-app"}
   ];
