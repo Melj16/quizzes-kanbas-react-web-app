@@ -73,7 +73,7 @@ export default function Dashboard({
         setViewAllCourse(!viewAllCourses);
     };
 
-    const filteredCourses = viewAllCourses ? allCourses : myCourses;
+    const filteredCourses = currentUser.role === "STUDENT" ? (viewAllCourses ? allCourses : myCourses) : courses;
 
     return (
         <div id="wd-dashboard">
