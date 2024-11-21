@@ -1,8 +1,11 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ProtectedRole from "../Account/ProtectedRole";
-import { enrollCourse, unenrollCourse } from "./reducer";
+import { enrollCourse, unenrollCourse, setEnrollments } from "./reducer";
+import * as courseClient from "../Courses/client";
+import * as userClient from "../Account/client";
+import * as enrollClient from "./client";
 export default function Dashboard({
     courses,
     course,
@@ -21,18 +24,56 @@ export default function Dashboard({
     const { currentUser } = useSelector((state: any) => state.accountReducer);
     const { enrollments } = useSelector((state: any) => state.enrollmentReducer);
     const [viewAllCourses, setViewAllCourse] = useState(false);
+    const [allCourses, setAllCourses] = useState<any[]>([]);
+    const [myCourses, setMyCourses] = useState<any[]>([]);
     const dispatch = useDispatch();
+
+    const fetchAllCourses = async () => {
+        const courses = await courseClient.fetchAllCourses();
+        setAllCourses(courses);
+    };
+
+    const fetchMyCourses = async () => {
+        const courses = await userClient.findMyCourses();
+        setMyCourses(courses);
+    }
+
+    const fetchEnrollments = async () => {
+        const enrollments = await userClient.findMyEnrollments(currentUser._id as string);
+        dispatch(setEnrollments(enrollments));
+    };
+
+    useEffect(() => {
+        fetchAllCourses();
+        fetchMyCourses();
+        fetchEnrollments();
+    }, []);
+
+    const enroll = async (cid: string) => {
+        try {
+            await enrollClient.addEnrollment(currentUser._id, cid);
+            dispatch(enrollCourse({ courseId: cid, userId: currentUser._id }));
+            fetchMyCourses();
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const unEnroll = async (cid: string) => {
+        try {
+            await enrollClient.deleteEnrollment(currentUser._id, cid);
+            dispatch(unenrollCourse({ courseId: cid, userId: currentUser._id }));
+            fetchMyCourses();
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     const toggleView = () => {
         setViewAllCourse(!viewAllCourses);
     };
 
-    const coursesToDisplay = currentUser.role === "STUDENT" ?
-        viewAllCourses ?
-            courses :
-            courses.filter((course) => enrollments.some((enrollment: { user: any; course: any; }) =>
-                enrollment.user === currentUser._id && enrollment.course === course._id)) :
-        courses;
+    const filteredCourses = viewAllCourses ? allCourses : myCourses;
 
     return (
         <div id="wd-dashboard">
@@ -53,7 +94,7 @@ export default function Dashboard({
                     onChange={(e) => setCourse({ ...course, description: e.target.value })} />
                 <hr />
             </ProtectedRole>
-            <h2 id="wd-dashboard-published">Published Courses ({coursesToDisplay.length})</h2> <hr />
+            <h2 id="wd-dashboard-published">Published Courses ({filteredCourses.length})</h2> <hr />
             {(currentUser.role === "STUDENT") && (
                 <button type="button"
                     className="btn btn-primary float-end"
@@ -63,7 +104,7 @@ export default function Dashboard({
             )}
             <div id="wd-dashboard-courses" className="row">
                 <div className="row row-cols-1 row-cols-md-5 g-4">
-                    {coursesToDisplay.map((course) => (
+                    {filteredCourses.map((course) => (
                         <div className="wd-dashboard-course col" style={{ width: "300px" }}>
                             <div className="card rounded-3 overflow-hidden">
                                 <Link to={currentUser.role === "FACULTY" ||
@@ -79,9 +120,9 @@ export default function Dashboard({
                                         <p className="wd-dashboard-course-title card-text overflow-y-hidden" style={{ maxHeight: 100 }}>
                                             {course.description} </p>
                                         {currentUser.role == "FACULTY" ||
-                                        enrollments.some((enrollment: { user: any; course: any; }) =>
-                                            enrollment.user === currentUser._id && enrollment.course === course._id) && (
-                                            <button className="btn btn-primary"> Go </button>)
+                                            enrollments.some((enrollment: { user: any; course: any; }) =>
+                                                enrollment.user === currentUser._id && enrollment.course === course._id) && (
+                                                <button className="btn btn-primary"> Go </button>)
                                         }
                                         {currentUser.role === "STUDENT" && (
                                             <div className="float-end">
@@ -92,7 +133,7 @@ export default function Dashboard({
                                                         className="btn btn-danger me-2"
                                                         onClick={(e) => {
                                                             e.preventDefault();
-                                                            dispatch(unenrollCourse({ courseId: course._id, userId: currentUser._id }));
+                                                            unEnroll(course._id);
                                                         }} >
                                                         Unenroll
                                                     </button>
@@ -102,7 +143,7 @@ export default function Dashboard({
                                                         className="btn btn-success me-2 mb-2"
                                                         onClick={(e) => {
                                                             e.preventDefault();
-                                                            dispatch(enrollCourse({ courseId: course._id, userId: currentUser._id }));
+                                                            enroll(course._id);
                                                         }} >
                                                         Enroll
                                                     </button>

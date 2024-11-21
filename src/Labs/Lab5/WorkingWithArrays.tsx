@@ -49,7 +49,7 @@ export default function WorkingWithArrays() {
             <input defaultValue={todo.id} className="form-control w-25 float-start me-2"
                 onChange={(e) => setTodo({ ...todo, id: e.target.value })} />
             <input defaultValue={todo.title} className="form-control w-50 float-start" id="wd-todo-update-title"
-                onChange={(e) => setTodo({ ...todo, title: e.target.value })} />
+                onChange={(e) => setTodo({ ...todo, title: e.target.value })} /><br /><br />
             <h4>
                 <label htmlFor="wd-todo-update-title">
                     Updating Description

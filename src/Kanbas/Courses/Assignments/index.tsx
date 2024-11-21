@@ -5,13 +5,27 @@ import AssignmentControlButtons from "./AssignmentControlButtons";
 import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import AssignmentLessonControlButtons from "./AssignmentLessonControlButtons";
-import { deleteAssignment } from "./reducer";
+import { deleteAssignment, setAssignments } from "./reducer";
+import * as courseClient from "../client";
+import * as assignmentClient from "./client";
+import { useEffect } from "react";
 
 export default function Assignments() {
   const { cid } = useParams();
   const { assignments } = useSelector((state: any) => state.assignmentReducer);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const dispatch = useDispatch();
+  const removeAssignment = async (assignmentId: string) => {
+    await assignmentClient.deleteAssignment(assignmentId);
+    dispatch(deleteAssignment(assignmentId));
+  };
+  const fetchAssignments = async () => {
+    const assignments = await courseClient.findAssignmentsForCourse(cid as string);
+    dispatch(setAssignments(assignments));
+  };
+  useEffect(() => {
+    fetchAssignments();
+  }, []);
   return (
     <div id="wd-assignments">
       <AssignmentControls /><br /><br /><br /><br />
@@ -23,8 +37,7 @@ export default function Assignments() {
             <AssignmentControlButtons />
           </div>
           <ul id="wd-lessons" className="list-group rounded-0">
-            {assignments.filter((a: any) => a.course === cid)
-              .map((a: any) => (
+            {assignments.map((a: any) => (
                 <li className="wd-lesson list-group-item p-3 ps-1 d-flex justify-content-between" style={{ width: "100%" }}>
                   <div className="align-content-center">
                     <BsGripVertical className="me-2 fs-3" />
@@ -52,7 +65,7 @@ export default function Assignments() {
                       assignmentName={a.title}
                       assignmentId={a._id}
                       deleteAssignment={(assignmentId) => {
-                        dispatch(deleteAssignment(assignmentId));
+                        removeAssignment(assignmentId)
                       }}
                     />
                   </div>
