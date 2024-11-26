@@ -7,8 +7,11 @@ export default function TOC() {
     { label: "Lab 2", path: "#/Labs/Lab2"},
     { label: "Lab 3", path: "#/Labs/Lab3"},
     { label: "Lab 4", path: "#/Labs/Lab4"},
+    { label: "Lab 5", path: "#/Labs/Lab5"},
     { label: "Kanbas", path: "#/Kanbas"},
-    { label: "My Github", path: "https://github.com/Melj16/kanbas-react-web-app"}
+    { label: "My Github (react)", path: "https://github.com/Melj16/kanbas-react-web-app/tree/a5"},
+    { label: "Github (node server)", path: "https://github.com/Melj16/kanbas-node-server-app/tree/a5"},
+    { label: "Server Root (render)", path: "https://kanbas-node-server-app-onc7.onrender.com/"}
   ];
   return (
     <ul className="nav nav-pills">

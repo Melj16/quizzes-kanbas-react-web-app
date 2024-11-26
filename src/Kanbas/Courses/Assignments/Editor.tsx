@@ -1,5 +1,6 @@
 import { Navigate, useNavigate, useParams } from "react-router";
-import * as db from "../../Database";
+import * as courseClient from "../client";
+import * as assignmentClient from "./client";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { addAssignment, updateAssignment } from "./reducer";
@@ -26,6 +27,16 @@ export default function AssignmentEditor({
     const { cid } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    const saveAssignment = async (assignment: any) => {
+        await assignmentClient.updateAssignment(assignment);
+        dispatch(updateAssignment(assignment));
+    };
+    const createAssignmentForCourse = async (assignment: any) => {
+        if (!cid) return;
+        const newAssignment = await courseClient.createAssignmentForCourse(cid as string, assignment);
+        dispatch(addAssignment(newAssignment));
+    };
 
     const { assignments } = useSelector((state: any) => state.assignmentReducer);
     const assignmentEdit = Edited ? assignments.find((a: any) => a._id === aid) : null;
@@ -60,7 +71,7 @@ export default function AssignmentEditor({
             until,
             course: cid,
         };
-        Edited ? dispatch(updateAssignment(assignment)) : dispatch(addAssignment(assignment));
+        Edited ? saveAssignment(assignment) : createAssignmentForCourse(assignment);
         navigate(`/Kanbas/Courses/${cid}/Assignments`);
     };
 

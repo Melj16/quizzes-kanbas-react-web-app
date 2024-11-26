@@ -2,18 +2,6 @@ import { FaPlus } from "react-icons/fa";
 import { CiSearch } from "react-icons/ci";
 import ProtectedRole from "../../Account/ProtectedRole";
 import { Navigate, useNavigate, useParams } from "react-router";
-import { addAssignment } from "./reducer";
-
-type Assignment = {
-    _id: string;
-    title: string;
-    course: string;
-    description?: string;
-    points?: string;
-    dueDate?: string;
-    availableFrom?: string;
-    availableUntil?: string;
-  }
 
 export default function AssignmentControls() {
     const {cid} = useParams();
