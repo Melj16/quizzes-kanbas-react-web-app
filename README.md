@@ -1,6 +1,6 @@
 [Website URL](https://main--kanbasnortheastern.netlify.app/#/Labs/Lab1)
 
-React app for CS4550
+React app for CS4550.
 
 # Getting Started with Create React App
 
