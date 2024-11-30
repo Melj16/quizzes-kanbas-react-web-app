@@ -12,7 +12,10 @@ export default function Dashboard({
     setCourse,
     addNewCourse,
     deleteCourse,
-    updateCourse
+    updateCourse,
+    enrolling,
+    setEnrolling,
+    updateEnrollment
 }: {
     courses: any[];
     course: any;
@@ -20,23 +23,20 @@ export default function Dashboard({
     addNewCourse: () => void;
     deleteCourse: (course: any) => void;
     updateCourse: () => void;
+    enrolling: boolean;
+    setEnrolling: (enrolling: boolean) => void;
+    updateEnrollment: (courseId: string, enrolled: boolean) => void;
 }) {
     const { currentUser } = useSelector((state: any) => state.accountReducer);
     const { enrollments } = useSelector((state: any) => state.enrollmentReducer);
     const [viewAllCourses, setViewAllCourse] = useState(false);
     const [allCourses, setAllCourses] = useState<any[]>([]);
-    const [myCourses, setMyCourses] = useState<any[]>([]);
     const dispatch = useDispatch();
 
     const fetchAllCourses = async () => {
         const courses = await courseClient.fetchAllCourses();
         setAllCourses(courses);
     };
-
-    const fetchMyCourses = async () => {
-        const courses = await userClient.findMyCourses();
-        setMyCourses(courses);
-    }
 
     const fetchEnrollments = async () => {
         const enrollments = await userClient.findMyEnrollments(currentUser._id as string);
@@ -45,39 +45,18 @@ export default function Dashboard({
 
     useEffect(() => {
         fetchAllCourses();
-        fetchMyCourses();
-        fetchEnrollments();
+        // fetchMyCourses();
+        // fetchEnrollments();
     }, []);
-
-    const enroll = async (cid: string) => {
-        try {
-            await enrollClient.addEnrollment(currentUser._id, cid);
-            dispatch(enrollCourse({ courseId: cid, userId: currentUser._id }));
-            fetchMyCourses();
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    const unEnroll = async (cid: string) => {
-        try {
-            await enrollClient.deleteEnrollment(currentUser._id, cid);
-            dispatch(unenrollCourse({ courseId: cid, userId: currentUser._id }));
-            fetchMyCourses();
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    const toggleView = () => {
-        setViewAllCourse(!viewAllCourses);
-    };
-
-    const filteredCourses = currentUser.role === "STUDENT" ? (viewAllCourses ? allCourses : myCourses) : courses;
 
     return (
         <div id="wd-dashboard">
-            <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
+            <h1 id="wd-dashboard-title">
+                Dashboard
+                <button onClick={() => setEnrolling(!enrolling)} className="float-end btn btn-primary" >
+                    {enrolling ? "My Courses" : "All Courses"}
+                </button>
+            </h1> <hr />
             <ProtectedRole>
                 <h5>New Course
                     <button className="btn btn-primary float-end"
@@ -94,63 +73,33 @@ export default function Dashboard({
                     onChange={(e) => setCourse({ ...course, description: e.target.value })} />
                 <hr />
             </ProtectedRole>
-            <h2 id="wd-dashboard-published">Published Courses ({filteredCourses.length})</h2> <hr />
-            {(currentUser.role === "STUDENT") && (
-                <button type="button"
-                    className="btn btn-primary float-end"
-                    onClick={toggleView}>
-                    {viewAllCourses ? "View Enrolled" : "View all Courses"}
-                </button>
-            )}
+            <h2 id="wd-dashboard-published">Published Courses ({courses.length})</h2> <hr />
             <div id="wd-dashboard-courses" className="row">
                 <div className="row row-cols-1 row-cols-md-5 g-4">
-                    {filteredCourses.map((course) => (
+                    {courses.map((course) => (
                         <div className="wd-dashboard-course col" style={{ width: "300px" }}>
                             <div className="card rounded-3 overflow-hidden">
-                                <Link to={currentUser.role === "FACULTY" ||
-                                    enrollments.some((enrollment: { user: any; course: any; }) =>
-                                        enrollment.user === currentUser._id && enrollment.course === course._id) ?
-                                    `/Kanbas/Courses/${course._id}/Home` :
-                                    '/Kanbas/Dashboard'}
+                                <Link to={(!enrolling || course.enrolled) ? `/Kanbas/Courses/${course._id}/Home` : '/Kanbas/Dashboard'}
                                     className="wd-dashboard-course-link text-decoration-none text-dark" >
                                     <img src={`/images/courses/RS101.png`} width="100%" height={160} />
                                     <div className="card-body">
                                         <h5 className="wd-dashboard-course-title card-title">
+                                            {enrolling && (
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        updateEnrollment(course._id, !course.enrolled);
+                                                    }}
+                                                    className={`btn ${course.enrolled ? "btn-danger" : "btn-success"} float-end`} >
+                                                    {course.enrolled ? "Unenroll" : "Enroll"}
+                                                </button>
+                                            )}
                                             {course.name} </h5>
                                         <p className="wd-dashboard-course-title card-text overflow-y-hidden" style={{ maxHeight: 100 }}>
                                             {course.description} </p>
-                                        {currentUser.role == "FACULTY" ||
-                                            enrollments.some((enrollment: { user: any; course: any; }) =>
-                                                enrollment.user === currentUser._id && enrollment.course === course._id) && (
+                                        {(currentUser.role == "FACULTY" || course.enrolled || !enrolling) && (
                                                 <button className="btn btn-primary"> Go </button>)
                                         }
-                                        {currentUser.role === "STUDENT" && (
-                                            <div className="float-end">
-                                                {enrollments.some((enrollment: { user: any; course: any; }) =>
-                                                    enrollment.user === currentUser._id && enrollment.course === course._id) ? (
-                                                    <button id="wd-edit-course-click"
-                                                        type="button"
-                                                        className="btn btn-danger me-2"
-                                                        onClick={(e) => {
-                                                            e.preventDefault();
-                                                            unEnroll(course._id);
-                                                        }} >
-                                                        Unenroll
-                                                    </button>
-                                                ) : (
-                                                    <button id="wd-edit-course-click"
-                                                        type="button"
-                                                        className="btn btn-success me-2 mb-2"
-                                                        onClick={(e) => {
-                                                            e.preventDefault();
-                                                            enroll(course._id);
-                                                        }} >
-                                                        Enroll
-                                                    </button>
-                                                )
-                                                }
-                                            </div>
-                                        )}
                                         <ProtectedRole>
                                             <div className="float-end">
                                                 <button id="wd-edit-course-click"

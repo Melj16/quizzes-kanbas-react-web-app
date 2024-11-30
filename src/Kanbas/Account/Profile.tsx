@@ -21,6 +21,11 @@ export default function Profile() {
     dispatch(setCurrentUser(null));
     navigate("/Kanbas/Account/Signin");
   };
+  const formatDob = (dob: string) => {
+    if (dob) {
+      return dob.split('T')[0];
+    }
+  }
   useEffect(() => { fetchProfile(); }, []);
   return (
     <div className="wd-profile-screen">
@@ -35,11 +40,11 @@ export default function Profile() {
             onChange={(e) => setProfile({ ...profile, firstName: e.target.value })} />
           <input defaultValue={profile.lastName} id="wd-lastname" className="form-control mb-2"
             onChange={(e) => setProfile({ ...profile, lastName: e.target.value })} />
-          <input defaultValue={profile.dob} id="wd-dob" className="form-control mb-2"
+          <input defaultValue={formatDob(profile.dob)} id="wd-dob" className="form-control mb-2"
             onChange={(e) => setProfile({ ...profile, dob: e.target.value })} type="date" />
           <input defaultValue={profile.email} id="wd-email" className="form-control mb-2"
             onChange={(e) => setProfile({ ...profile, email: e.target.value })} />
-          <select defaultValue={profile.role}
+          <select value={profile.role}
             onChange={(e) => setProfile({ ...profile, role: e.target.value })}
             className="form-control mb-2" id="wd-role">
             <option value="USER">User</option>            <option value="ADMIN">Admin</option>
