@@ -54,7 +54,10 @@ export default function Quizzes() {
                                     <RxRocket className="text-success me-2 fs-3" />
                                 </div>
                                 <div className="flex-grow-1 px-2">
-                                    <b>{quiz.name}</b>
+                                    <a className="wd-quiz-link link-dark text-decoration-none"
+                                        href={`#/Kanbas/Courses/${cid}/Quizzes/${quiz._id}`}>
+                                        <b>{quiz.name}</b>
+                                    </a>
                                     <p>
                                         <b>{checkAvailableDate(quiz.available, quiz.until)}</b>
                                         &nbsp;| <b>Due</b> {new Date(quiz.due).toDateString().split(' ').slice(1).join(' ')}

@@ -9,12 +9,12 @@ import PeopleTable from "./People/Table";
 import { useDispatch } from "react-redux";
 import Users from "./Users";
 import Quizzes from "./Quizzes";
+import QuizEditor from "./Quizzes/Details";
 
 export default function Courses({ courses }: { courses: any[];}) {
     const { cid } = useParams();
     const course = courses.find((course) => course._id === cid);
     const { pathname } = useLocation();
-    const dispatch = useDispatch();
     return (
         <div id="wd-courses">
             <h2 className="text-danger">
@@ -33,6 +33,7 @@ export default function Courses({ courses }: { courses: any[];}) {
                     <Route path="Assignments/new" element={<div style={{ width: "500px" }}><AssignmentEditor /></div>} />
                     <Route path="Assignments/:aid" element={<div style={{ width: "500px" }}><AssignmentEditor Edited /></div>} />
                     <Route path="Quizzes" element={<Quizzes />} />
+                    <Route path="Quizzes/:qid" element={<QuizEditor />} />
                     <Route path="People" element={<Users />} />
                 </Routes>
             </div>
