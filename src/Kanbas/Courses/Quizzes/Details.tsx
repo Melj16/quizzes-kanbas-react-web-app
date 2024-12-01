@@ -9,10 +9,12 @@ export default function Details() {
                 <button className="btn btn-lg btn-light border rounded-1 me-2">
                     Preview
                 </button>
-                <button className="btn btn-lg btn-light border rounded-1">
-                    Edit
-                    <FaPencilAlt className="ms-1" />
-                </button>
+                <a href={`#/Kanbas/Courses/${cid}/Quizzes/${qid}/edit`}>
+                    <button className="btn btn-lg btn-light border rounded-1">
+                        Edit
+                        <FaPencilAlt className="ms-1" />
+                    </button>
+                </a>
             </div>
             <br /><hr />
             <h1>Q1</h1><br /> {/* Replace with the quiz title */}

@@ -9,7 +9,8 @@ import PeopleTable from "./People/Table";
 import { useDispatch } from "react-redux";
 import Users from "./Users";
 import Quizzes from "./Quizzes";
-import QuizEditor from "./Quizzes/Details";
+import QuizDetails from "./Quizzes/Details";
+import QuizDetailsTabs from "./Quizzes/DetailsTabs";
 
 export default function Courses({ courses }: { courses: any[];}) {
     const { cid } = useParams();
@@ -33,7 +34,8 @@ export default function Courses({ courses }: { courses: any[];}) {
                     <Route path="Assignments/new" element={<div style={{ width: "500px" }}><AssignmentEditor /></div>} />
                     <Route path="Assignments/:aid" element={<div style={{ width: "500px" }}><AssignmentEditor Edited /></div>} />
                     <Route path="Quizzes" element={<Quizzes />} />
-                    <Route path="Quizzes/:qid" element={<QuizEditor />} />
+                    <Route path="Quizzes/:qid" element={<QuizDetails />} />
+                    <Route path="Quizzes/:qid/edit" element={<div style={{ width: "700px" }}><QuizDetailsTabs /></div>} />
                     <Route path="People" element={<Users />} />
                 </Routes>
             </div>
