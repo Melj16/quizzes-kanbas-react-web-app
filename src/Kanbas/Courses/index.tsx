@@ -8,6 +8,7 @@ import { FaAlignJustify } from "react-icons/fa";
 import PeopleTable from "./People/Table";
 import { useDispatch } from "react-redux";
 import Users from "./Users";
+import Quizzes from "./Quizzes";
 
 export default function Courses({ courses }: { courses: any[];}) {
     const { cid } = useParams();
@@ -31,6 +32,7 @@ export default function Courses({ courses }: { courses: any[];}) {
                     <Route path="Assignments" element={<Assignments />} />
                     <Route path="Assignments/new" element={<div style={{ width: "500px" }}><AssignmentEditor /></div>} />
                     <Route path="Assignments/:aid" element={<div style={{ width: "500px" }}><AssignmentEditor Edited /></div>} />
+                    <Route path="Quizzes" element={<Quizzes />} />
                     <Route path="People" element={<Users />} />
                 </Routes>
             </div>
