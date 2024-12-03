@@ -216,7 +216,7 @@ export default function DetailsEditor() {
                 </div>
             </div>
             <hr />
-            {/* Save and Cancel buttons*/}
+            {/* Save and Cancel buttons */}
             <div className="d-flex float-end">
             <button onClick={() => navigate(`/Kanbas/Courses/${cid}/Quizzes`)} className="btn btn-lg btn-light
                         border rounded-1">

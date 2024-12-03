@@ -3,7 +3,7 @@ import QuizControls from "./QuizControls";
 import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import * as courseClient from "../client";
-import { setQuizzes } from "./reducer";
+import { setQuizzes, createQuiz } from "./reducer";
 import { useEffect } from "react";
 import { RxRocket } from "react-icons/rx";
 import QuizLessonControlButtons from "./QuizLessonControlButtons";
@@ -13,6 +13,7 @@ export default function Quizzes() {
     const { quizzes } = useSelector((state: any) => state.quizReducer);
     const { currentUser } = useSelector((state: any) => state.accountReducer);
     const dispatch = useDispatch();
+
     const fetchQuizzes = async () => {
         let quizList = await courseClient.findQuizzesForCourse(cid as string);
         if(currentUser.role === 'STUDENT') {
@@ -20,6 +21,7 @@ export default function Quizzes() {
         }
         dispatch(setQuizzes(quizList));
     };
+
     const checkAvailableDate = (available: string, until: string) => {
         const currentDate = new Date();
         const availableDate = new Date(available);
@@ -34,9 +36,11 @@ export default function Quizzes() {
             return `Available until ${untilDate.toDateString().split(' ').slice(1).join(' ')}`;
         }
     };
+
     useEffect(() => {
         fetchQuizzes();
     }, []);
+
     return (
         <div className="wd-quizzes">
             <QuizControls courseId={cid || ''} /><br /><br /><hr />

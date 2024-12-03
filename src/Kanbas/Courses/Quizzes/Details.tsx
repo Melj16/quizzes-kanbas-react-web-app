@@ -45,6 +45,10 @@ export default function Details() {
             {/* Begin Quiz Details */}
             <div className="container m-0 fs-5">
                 <div className="row">
+                    <p className="col col-3 text-end"><b>Quiz Instructions</b></p>
+                    <p className="col">{quiz.instructions}</p>
+                </div>
+                <div className="row">
                     <p className="col col-3 text-end"><b>Quiz Type</b></p>
                     <p className="col">{quiz.type}</p>
                 </div>
