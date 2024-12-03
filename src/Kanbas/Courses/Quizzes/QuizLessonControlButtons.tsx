@@ -1,14 +1,28 @@
 import { IoEllipsisVertical } from "react-icons/io5";
 import GreenCheckmark from "../Modules/GreenCheckmark";
-import { useState } from "react";
 import { FaPencilAlt, FaTrash } from "react-icons/fa";
-import { IoIosCheckmarkCircle } from "react-icons/io";
+import { IoIosCheckmarkCircle, IoIosCloseCircle } from "react-icons/io";
+import * as quizClient from "./client";
+import { useNavigate } from "react-router";
 
-export default function QuizLessonControlButtons() {
+export default function QuizLessonControlButtons({ courseId, quizId, published }:
+    { courseId: string; quizId: string; published: boolean }) {
+        const handleDeleteQuiz = () => {
+            quizClient.deleteQuiz(quizId);
+            window.location.reload();
+        }
+        const handlePublishQuiz = (bool: boolean) => {
+            quizClient.updateQuiz(quizId, { published: bool });
+            window.location.reload();
+        }
+        const navigate = useNavigate();
+        const handleEditQuiz = () => {
+        navigate(`/Kanbas/Courses/${courseId}/Quizzes/${quizId}/edit`);
+        }
     return (
         <div>
             <div className="dropdown dropend float-end">
-                <GreenCheckmark />
+                {published ? ( <GreenCheckmark /> ) : (<IoIosCloseCircle className="text-danger" />) }
                 <button
                     id="wd-quiz-lesson-control-btn"
                     className="btn border border-0"
@@ -19,23 +33,32 @@ export default function QuizLessonControlButtons() {
                 </button>
                 <ul className="dropdown-menu p-0" aria-labelledby="wd-quiz-lesson-control-btn">
                     <li>
-                        <a className="dropdown-item" href="">
+                        <button className="dropdown-item" onClick={() => handleEditQuiz()}>
                             Edit
                             <FaPencilAlt className="float-end" />
-                        </a>
+                        </button>
                     </li>
                     <li>
-                        <a className="dropdown-item" href="">
+                        <button className="dropdown-item" onClick={() => handleDeleteQuiz()}>
                             Delete
                             <FaTrash className="float-end" />
-                        </a>
+                        </button>
                     </li>
-                    <li>
-                        <a className="dropdown-item" href="">
-                            Publish
-                            <IoIosCheckmarkCircle className="float-end fs-5"/>
-                        </a>
-                    </li>
+                    {published ? (
+                        <li>
+                            <button className="dropdown-item" onClick={() => handlePublishQuiz(false)}>
+                                Unpublish
+                                <IoIosCloseCircle className="float-end fs-5"/>
+                            </button>
+                        </li>
+                    ) : (
+                        <li>
+                            <button className="dropdown-item" onClick={() => handlePublishQuiz(true)}>
+                                Publish
+                                <IoIosCheckmarkCircle className="float-end fs-5"/>
+                            </button>
+                        </li>
+                    )}
                 </ul>
             </div>
         </div>

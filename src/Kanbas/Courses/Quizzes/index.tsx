@@ -9,13 +9,16 @@ import { RxRocket } from "react-icons/rx";
 import QuizLessonControlButtons from "./QuizLessonControlButtons";
 
 export default function Quizzes() {
-    const { cid } = useParams();
+    const { cid } = useParams<{ cid: string }>();
     const { quizzes } = useSelector((state: any) => state.quizReducer);
     const { currentUser } = useSelector((state: any) => state.accountReducer);
     const dispatch = useDispatch();
     const fetchQuizzes = async () => {
-        const assignments = await courseClient.findQuizzesForCourse(cid as string);
-        dispatch(setQuizzes(assignments));
+        let quizList = await courseClient.findQuizzesForCourse(cid as string);
+        if(currentUser.role === 'STUDENT') {
+            quizList = quizList.filter((quiz: any) => quiz.published);
+        }
+        dispatch(setQuizzes(quizList));
     };
     const checkAvailableDate = (available: string, until: string) => {
         const currentDate = new Date();
@@ -36,7 +39,7 @@ export default function Quizzes() {
     }, []);
     return (
         <div className="wd-quizzes">
-            <QuizControls /><br /><br /><hr />
+            <QuizControls courseId={cid || ''} /><br /><br /><hr />
             <ul id="wd-quizzes-list-group" className="list-group rounded-0">
                 <li className="wd-module list-group-item p-0 fs-5 border border-gray">
                     <div className="wd-title p-3 ps-2 bg-secondary">
@@ -66,7 +69,8 @@ export default function Quizzes() {
                                     </p>
                                 </div>
                                 <div className="align-content-center justify-content-end">
-                                    <QuizLessonControlButtons />
+                                {(currentUser.role === 'FACULTY' || currentUser.role === 'ADMIN') && (
+                                    <QuizLessonControlButtons courseId={cid || ''} quizId={quiz._id.toString()} published={quiz.published} />)}
                                 </div>
                             </li>
                         ))

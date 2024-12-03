@@ -1,6 +1,5 @@
 import { useState } from "react";
 import DetailsEditor from "./DetailsEditor";
-import QestionEditor from "./QuestionEditor";
 import QuestionEditor from "./QuestionEditor";
 
 export default function DetailsTabs() {
