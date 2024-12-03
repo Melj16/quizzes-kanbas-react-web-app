@@ -1,6 +1,7 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 export default function DetailsEditor() {
+    const {cid, qid} = useParams();
     return (
         <div id="wd-details-editor">
             <div className="form-group mb-3">
@@ -149,9 +150,9 @@ export default function DetailsEditor() {
                 </div>
             </div>
             <hr />
-            {/* Save and Cancel buttons*/}
+            {/* Save and Cancel buttons */}
             <div className="d-flex float-end">
-                <Link to={``}>
+                <Link to={`/Kanbas/Courses/${cid}/Quizzes`}>
                     <button className="btn btn-light border text-secondary mx-1">Cancel</button>
                 </Link>
                 <button type="button"

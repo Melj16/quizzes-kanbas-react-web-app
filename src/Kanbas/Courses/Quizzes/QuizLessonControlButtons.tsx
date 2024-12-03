@@ -3,8 +3,14 @@ import GreenCheckmark from "../Modules/GreenCheckmark";
 import { useState } from "react";
 import { FaPencilAlt, FaTrash } from "react-icons/fa";
 import { IoIosCheckmarkCircle } from "react-icons/io";
+import { useParams } from "react-router";
 
-export default function QuizLessonControlButtons() {
+export default function QuizLessonControlButtons(    
+    { quizId }:
+    {
+        quizId: string;
+    }) {
+    const {cid} = useParams();
     return (
         <div>
             <div className="dropdown dropend float-end">
@@ -19,7 +25,7 @@ export default function QuizLessonControlButtons() {
                 </button>
                 <ul className="dropdown-menu p-0" aria-labelledby="wd-quiz-lesson-control-btn">
                     <li>
-                        <a className="dropdown-item" href="">
+                        <a className="dropdown-item" href={`#/Kanbas/Courses/${cid}/Quizzes/${quizId}`}>
                             Edit
                             <FaPencilAlt className="float-end" />
                         </a>
