@@ -1,5 +1,6 @@
 import { useState } from "react";
 import DetailsEditor from "./DetailsEditor";
+import QuestionEditor from "./Questions/QuestionEditor";
 
 export default function DetailsTabs() {
     const [activeTab, setActiveTab] = useState("details");
@@ -30,7 +31,7 @@ export default function DetailsTabs() {
             </ul>
             <div className="tab-content">
                 {activeTab === "details" && <DetailsEditor />}
-                {activeTab === "questions" && <h1>QuestionEditor </h1>}
+                {activeTab === "questions" && <QuestionEditor />}
             </div>
         </div>
     );

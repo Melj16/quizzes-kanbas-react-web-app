@@ -1,154 +1,160 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaPlus, FaEdit, FaTrash, FaPencilAlt } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
-import { createQuestion } from "../reducer";
-
-type Question = {
-    id: number;
-    name: string;
-    type: string;
-    instructions: string;
-    answers: string[];
-}
+import * as quizClient from "./client";
+import { setQuestions } from "./reducer";
 
 export default function QuestionEditor() {
     const { cid, qid } = useParams();
     const dispatch = useDispatch();
-    const { quizzes } = useSelector((state: any) => state.quizReducer);
-    const quiz = quizzes.find((q: any) => q._id === qid);
-    const [questions, setQuestions] = useState<Question[]>([]);
-    const [editingQuestionId, setEditingQuestionId] = useState<number | null>(null);
-    const [editingQuestion, setEditingQuestion] = useState<Question | null>(null);
+    const { questions } = useSelector((state: any) => state.questionReducer);
+    const [editingQuestionId, setEditingQuestionId] = useState<string | null>(null);
 
-    const handleAddQuestion = () => {
-        const newQuestion: Question = {
-            id: questions.length + 1,
-            name: "",
-            type: "multiple-choice",
-            instructions: "",
-            answers: ["1", "2", "3", "4"],
-        };
-        setQuestions([...questions, newQuestion]);
+    const fetchQuestions = async () => {
+        const questions = await quizClient.findQuestionsForQuiz(qid as string);
+        dispatch(setQuestions(questions));
     };
+
+    useEffect(() => {
+        fetchQuestions();
+    }, []);
 
     return (
         <div className="wd-question-editor">
             {/* List of Questions */}
             <ul className="wd-question-list list-group mt-3">
-                {questions.map(question => (
-                    <li key={question.id} className="list-group-item mb-3 border border-dark rounded-1">
+                {questions.map((question: any) => (
+                    <li className="list-group-item mb-3 border border-dark rounded-1">
                         <div className="d-flex justify-content-between align-items-center">
-                            {question.name}
+                            {question.title}
                             <div className="fs-5">
                                 <FaPencilAlt className="text-primary me-2"
-                                    onClick={() => {/* handler fuction */}} />
+                                    onClick={() => { setEditingQuestionId(editingQuestionId === question._id ? null : question._id) }} />
                                 <FaTrash className="text-danger"
-                                    onClick={() => {/* handler fuction */}} />
+                                    onClick={() => {/* handler fuction */ }} />
                             </div>
                         </div>
-                        {editingQuestionId === question.id && (
+                        {editingQuestionId === question._id && (
                             <div className="mt-3">
                                 <div className="form-group mb-3">
-                                    <label className="form-label" htmlFor="question-name">Name</label>
+                                    <label className="form-label" htmlFor="question-name"><b>Name</b></label>
                                     <input
                                         type="text"
                                         className="form-control"
                                         id="question-name"
-                                        value={editingQuestion?.name || ""}
-                                        onChange={() => {/* handler fuction */}}
+                                        value={question?.title || ""}
+                                        onChange={() => {/* handler fuction */ }}
                                     />
                                 </div>
-                                <div className="form-group mb-3">
-                                    <label className="form-label" htmlFor="question-type">Question Type</label>
-                                    <select
-                                        className="form-control"
-                                        id="question-type"
-                                        value={editingQuestion?.type || ""}
-                                        onChange={() => {/* handler fuction */}}
-                                    >
-                                        <option value="multiple-choice">Multiple Choice</option>
-                                        <option value="true-false">True/False</option>
-                                        <option value="fill-in-the-blank">Fill in the Blank</option>
-                                    </select>
+                                <div className="form-group mb-3 d-flex justify-content-between">
+                                    <div className="w-50">
+                                        <label className="form-label" htmlFor="question-type"><b>Question Type</b></label>
+                                        <select
+                                            className="form-control"
+                                            id="question-type"
+                                            value={question?.type || ""}
+                                            onChange={() => {/* handler fuction */ }}
+                                        >
+                                            <option value="multiple-choice">Multiple Choice</option>
+                                            <option value="true-false">True/False</option>
+                                            <option value="fill-in-the-blank">Fill in the Blank</option>
+                                        </select>
+                                    </div>
+                                    <div className="w-25">
+                                        <label className="form-label" htmlFor="question-points"><b>Points</b></label>
+                                        <input
+                                            type="number"
+                                            className="form-control"
+                                            id="question-points"
+                                            value={question?.points || ""}
+                                            onChange={() => {/* handler fuction */ }}
+                                        />
+                                    </div>
                                 </div>
                                 <div className="form-group mb-3">
-                                    <label className="form-label" htmlFor="question-instructions">Instructions</label>
+                                    <label className="form-label" htmlFor="question-instructions"><b>Question</b></label>
                                     <textarea
                                         className="form-control"
                                         id="question-instructions"
-                                        value={editingQuestion?.instructions || ""}
-                                        onChange={() => {/* handler fuction */}}
+                                        value={question?.question || ""}
+                                        onChange={() => {/* handler fuction */ }}
                                     ></textarea>
                                 </div>
                                 <div className="form-group mb-3">
-                                    <label className="form-label">Potential Answers</label>
-                                    {editingQuestion?.type === "multiple-choice" && editingQuestion.answers.map(answer => (
-                                        <div key={answer} className="input-group mb-2">
+                                    <label className="form-label"><b>Potential Answers</b></label>
+                                    {question?.type === "multiple-choice" && question.choices.map((choice: any) => (
+                                        <div className="input-group mb-2">
                                             <input
                                                 type="text"
                                                 className="form-control"
                                                 placeholder="Answer"
-                                                value={answer}
-                                                onChange={() => {/* handler fuction */}}
+                                                value={choice}
+                                                onChange={() => {/* handler fuction */ }}
                                             />
                                             <div className="input-group-text">
                                                 <input
                                                     type="radio"
                                                     name="correct-answer"
-                                                    checked={false}
-                                                    onChange={() => {/* handler fuction */}}
+                                                    checked={question.answer === choice}
+                                                    onChange={() => {/* handler fuction */ }}
                                                 />
                                             </div>
                                             <button
                                                 type="button"
                                                 className="btn btn-danger"
-                                                onClick={() => {/* handler fuction */}}
+                                                onClick={() => {/* handler fuction */ }}
                                             >
                                                 <FaTrash />
                                             </button>
                                         </div>
                                     ))}
-                                    {editingQuestion?.type === "true-false" && (
+                                    {question?.type === "true-false" && (
                                         <div>
                                             <div className="form-check">
                                                 <input
+                                                    id="wd-question-true-input"
                                                     className="form-check-input"
                                                     type="checkbox"
-                                                    onChange={() => {/* handler fuction */}}
+                                                    onChange={() => {/* handler fuction */ }}
                                                 />
-                                                <label className="form-check-label">True</label>
+                                                <label className="form-check-label" htmlFor="wd-question-true-input">
+                                                    True
+                                                </label>
                                             </div>
                                             <div className="form-check">
                                                 <input
+                                                    id="wd-question-false-input"
                                                     className="form-check-input"
                                                     type="checkbox"
-                                                    onChange={() => {/* handler fuction */}}
+                                                    onChange={() => {/* handler fuction */ }}
                                                 />
-                                                <label className="form-check-label">False</label>
+                                                <label className="form-check-label" htmlFor="wd-question-false-input">
+                                                    False
+                                                </label>
                                             </div>
                                         </div>
                                     )}
-                                    {editingQuestion?.type === "fill-in-the-blank" && editingQuestion.answers.map(answer => (
-                                        <div key={answer} className="input-group mb-2">
+                                    {question?.type === "fill-in-the-blank" && question.choices.map((choice: any) => (
+                                        <div key={choice} className="input-group mb-2">
                                             <input
                                                 type="text"
                                                 className="form-control"
                                                 placeholder="Correct Answer"
-                                                value={answer}
-                                                onChange={() => {/* handler fuction */}}
+                                                value={choice}
+                                                onChange={() => {/* handler fuction */ }}
                                             />
                                             <button
                                                 type="button"
                                                 className="btn btn-danger"
-                                                onClick={() => {/* handler fuction */}}
+                                                onClick={() => {/* handler fuction */ }}
                                             >
                                                 <FaTrash />
                                             </button>
                                         </div>
                                     ))}
-                                    {(editingQuestion?.type === "multiple-choice" || editingQuestion?.type === "fill-in-the-blank") && (
-                                        <a onClick={() => {/* handler fuction */}}
+                                    {(question?.type === "multiple-choice" || question?.type === "fill-in-the-blank") && (
+                                        <a onClick={() => {/* handler fuction */ }}
                                             className="float-end text-danger text-decoration-none d-flex align-items-center"
                                             style={{ cursor: "pointer" }}>
                                             <FaPlus className="me-2" />
@@ -161,7 +167,7 @@ export default function QuestionEditor() {
                                     <button type="button" className="btn btn-light border texxt-secondary me-2" onClick={() => setEditingQuestionId(null)}>
                                         Cancel
                                     </button>
-                                    <button type="button" className="btn btn-danger" onClick={() => {/* handler fuction */}}>
+                                    <button type="button" className="btn btn-danger" onClick={() => {/* handler fuction */ }}>
                                         Update Question
                                     </button>
                                 </div>
@@ -171,7 +177,7 @@ export default function QuestionEditor() {
                 ))}
             </ul>
             <div className="text-center mt-3">
-                <button className="btn btn-lg btn-secondary" onClick={handleAddQuestion}>
+                <button className="btn btn-lg btn-secondary" onClick={() => {/* Handler function */ }}>
                     <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
                     New Question
                 </button>
