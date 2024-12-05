@@ -23,3 +23,7 @@ export const getQuizzes = async (courseId: string) => {
     const { data } = await axiosWithCredentials.get(`${COURSE_API}/${courseId}/quizzes`);
     return data;
 }
+export const getQuestions = async (quizId: string) => {
+    const { data } = await axiosWithCredentials.get(`${QUIZ_API}/${quizId}/questions`);
+    return data;
+}

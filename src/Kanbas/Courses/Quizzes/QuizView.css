@@ -1,0 +1,121 @@
+.quiz-container {
+    font-family: Arial, sans-serif;
+    margin: 20px auto;
+    max-width: 800px;
+}
+
+.quiz-title {
+    text-align: center;
+    color: #000000;
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.quiz-instructions {
+    text-align: center;
+    color: #555;
+    margin-bottom: 20px;
+    font-size: 1rem;
+}
+
+.question-card {
+    margin-bottom: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    width: 700px;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.question-header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+}
+
+.question-title {
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.question-points {
+    font-size: 1rem;
+    color: #555;
+}
+
+.question-text {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.options-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.option-item {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.radio-input {
+    margin-right: 10px;
+}
+
+.fill-blank-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.action-button {
+    padding: 10px 15px;
+    font-size: 1rem;
+    color: #ffffff;
+    background-color: #bababa;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    font-weight: bold;
+}
+
+.action-button:hover {
+    background-color: #bababa;
+}
+
+.action-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.submit-quiz {
+    margin-top: 20px;
+    text-align: right;
+}
+
+.unknown-type {
+    color: #999;
+}
+
+.no-questions {
+    text-align: center;
+    color: #999;
+}

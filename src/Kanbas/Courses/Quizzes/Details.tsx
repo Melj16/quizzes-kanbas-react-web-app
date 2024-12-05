@@ -30,9 +30,11 @@ export default function Details() {
     return (
         <div className="w-100">
             <div className="d-flex justify-content-center">
-                <button className="btn btn-lg btn-light border rounded-1 me-2">
-                    Preview
-                </button>
+                <a href={`#/Kanbas/Courses/${cid}/Quizzes/${qid}/view`}>
+                    <button className="btn btn-lg btn-light border rounded-1 me-2">
+                        Preview
+                    </button>
+                </a>
                 <a href={`#/Kanbas/Courses/${cid}/Quizzes/${qid}/edit`}>
                     <button className="btn btn-lg btn-light border rounded-1">
                         Edit
