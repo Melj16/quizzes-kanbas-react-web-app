@@ -3,6 +3,7 @@ import QuizControls from "./QuizControls";
 import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import * as courseClient from "../client";
+import * as quizClient from "./client";
 import { setQuizzes, createQuiz } from "./reducer";
 import { useEffect } from "react";
 import { RxRocket } from "react-icons/rx";
@@ -14,12 +15,21 @@ export default function Quizzes() {
     const { currentUser } = useSelector((state: any) => state.accountReducer);
     const dispatch = useDispatch();
 
+    const fetchAnswers = async (quizId: string) => {
+        const answers = await quizClient.getAnswersForQuiz(quizId, currentUser._id);
+        return answers
+    }
+
     const fetchQuizzes = async () => {
         let quizList = await courseClient.findQuizzesForCourse(cid as string);
         if(currentUser.role === 'STUDENT') {
             quizList = quizList.filter((quiz: any) => quiz.published);
         }
-        dispatch(setQuizzes(quizList));
+        const quizzesWithScores = await Promise.all(quizList.map(async (quiz: any) => {
+            const answers = await fetchAnswers(quiz._id);
+            return { ...quiz, score: answers.score };
+        }));
+        dispatch(setQuizzes(quizzesWithScores));
     };
 
     const checkAvailableDate = (available: string, until: string) => {
@@ -51,6 +61,10 @@ export default function Quizzes() {
                         <b>Assignment Quizzes</b>
                     </div>
                     <ul id="wd-lessons" className="list-group rounded-0">
+                        {quizzes.length === 0 && <li
+                                className="wd-lesson list-group-item p-3 ps-1 d-flex justify-content-between"
+                                style={{ width: "100%" }}>
+                                    No quizzes {currentUser.role === "FACULTY" && "press +Quiz to add quiz"}</li>}
                         {quizzes.map((quiz: any) => (
                             <li
                                 className="wd-lesson list-group-item p-3 ps-1 d-flex justify-content-between"
@@ -67,8 +81,8 @@ export default function Quizzes() {
                                     </a>
                                     <p>
                                         <b>{checkAvailableDate(quiz.available, quiz.until)}</b>
-                                        &nbsp;| <b>Due</b> {new Date(quiz.due).toDateString().split(' ').slice(1).join(' ')}
-                                        &nbsp;| {quiz.points || 0} pts
+                                         <b> Due</b> {new Date(new Date(quiz.due).setDate(new Date(quiz.due).getDate() + 1)).toDateString().split(' ').slice(1).join(' ')}
+                                         &nbsp;| {quiz.score ? `${quiz.score} / ${quiz.points}` : quiz.points} pts
                                         &nbsp;| {quiz.number_of_questions} questions
                                     </p>
                                 </div>

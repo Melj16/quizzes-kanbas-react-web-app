@@ -1,6 +1,8 @@
-import { FaPencilAlt } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router";
 import { useEffect, useState } from "react";
+import { EditorState, ContentState } from "draft-js";
+import { Editor } from "react-draft-wysiwyg";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import * as quizClient from "./client";
 
 export default function DetailsEditor() {
@@ -26,6 +28,29 @@ export default function DetailsEditor() {
         until: "",
         published: false,
     });
+    const [editorState, setEditorState] = useState<EditorState>(
+        EditorState.createEmpty()
+    );
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchQuiz = async () => {
+            if (qid) {
+                const fetchedQuiz = await quizClient.getQuiz(qid);
+                setQuiz(fetchedQuiz);
+
+                const contentState = ContentState.createFromText(
+                    fetchedQuiz.instructions || ""
+                );
+                setEditorState(EditorState.createWithContent(contentState));
+
+                setLoading(false);
+            }
+        };
+        fetchQuiz();
+    }, [qid]);
+
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value, type } = e.target;
         const checked = (e.target as HTMLInputElement).checked;
@@ -33,28 +58,24 @@ export default function DetailsEditor() {
             ...prev,
             [name]: type === "checkbox" ? checked : value,
         }));
-    };    
-    const navigate = useNavigate();
-    const handleCreateQuiz = (courseId: string) => {
-        if (qid) {
-            quizClient.updateQuiz(qid, quiz);
-        } else {
-            quizClient.createQuiz(courseId, quiz);
-        }
-        navigate(`/Kanbas/Courses/${courseId}/Quizzes`);
-    }
+    };
 
-    useEffect(() => {
-        const fetchQuiz = async () => {
-            if (qid) {
-                const fetchedQuiz = await quizClient.getQuiz(qid);
-                console.log(fetchedQuiz);
-                setQuiz(fetchedQuiz);
-                setLoading(false);
-            }
-        };
-        fetchQuiz();
-    }, [qid]);
+    const handleSaveQuiz = (courseId: string) => {
+        const instructions = editorState.getCurrentContent().getPlainText();
+
+        const updatedQuiz = { ...quiz, instructions };
+
+        if (qid) {
+            quizClient.updateQuiz(qid, updatedQuiz);
+        } else {
+            quizClient.createQuiz(courseId, updatedQuiz);
+        }
+        if (quiz.published) {
+            navigate(`/Kanbas/Courses/${courseId}/Quizzes`);
+        } else {
+            navigate(`/Kanbas/Courses/${courseId}/Quizzes/${qid}/edit`);
+        }
+    };
 
     if (loading) {
         return <div>Loading...</div>;
@@ -70,18 +91,28 @@ export default function DetailsEditor() {
                 <label className="form-label" htmlFor="wd-quiz-name">
                     Name
                 </label>
-                <input type="text" 
-                className="form-control"
-                id="wd-quiz-name"
-                placeholder="Quiz Name"
-                name="name"
-                value={quiz.name || ""}
-                onChange={handleInputChange}/>
+                <input
+                    type="text"
+                    className="form-control"
+                    id="wd-quiz-name"
+                    placeholder="Quiz Name"
+                    name="name"
+                    value={quiz.name || ""}
+                    onChange={handleInputChange}
+                />
             </div>
             <div className="form-group">
-                <label className="form-label" htmlFor="wd-quiz-description">Quiz Instructions:</label>
-                <textarea className="form-control" id="wd-quiz-description"
-                    placeholder="Quiz Instructions" rows={5} name="instructions" value={quiz.instructions || ""} onChange={handleInputChange}/>
+                <label className="form-label" htmlFor="wd-quiz-description">
+                    Quiz Instructions:
+                </label>
+                <Editor
+                    editorState={editorState}
+                    toolbarClassName="toolbarClassName"
+                    wrapperClassName="wrapperClassName"
+                    editorClassName="editorClassName"
+                    onEditorStateChange={setEditorState} // Update the EditorState
+                    editorStyle={{ border: "1px solid #ced4da", borderRadius: "0.25rem", padding: "0.5rem" }} // Add outline
+                />
             </div>
             {/* Grid begins here */}
             <div className="container mt-3">
@@ -223,14 +254,14 @@ export default function DetailsEditor() {
                         border rounded-1">
                         cancel
                     </button>
-                    <button onClick={() => cid && handleCreateQuiz(cid)} className="btn btn-lg btn-danger
+                    <button onClick={() => cid && handleSaveQuiz(cid)} className="btn btn-lg btn-danger
                         border rounded-1">
                         {qid ? "Update Quiz" : "Create Quiz"}
                     </button>
-                    {!qid && (
-                        <button onClick={() => { if (cid) { quiz.published = true; handleCreateQuiz(cid); }}} className="btn btn-lg btn-danger
+                    {!quiz.published && (
+                        <button onClick={() => { if (cid) { quiz.published = true; handleSaveQuiz(cid); }}} className="btn btn-lg btn-danger
                         border rounded-1">
-                        Create and Publish Quiz
+                        Save and Publish Quiz
                     </button>)}
             </div>
         </div>

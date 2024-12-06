@@ -4,16 +4,20 @@ import { FaPencilAlt, FaTrash } from "react-icons/fa";
 import { IoIosCheckmarkCircle, IoIosCloseCircle } from "react-icons/io";
 import * as quizClient from "./client";
 import { useNavigate } from "react-router";
+import { useState } from "react";
 
 export default function QuizLessonControlButtons({ courseId, quizId, published }:
     { courseId: string; quizId: string; published: boolean }) {
+        const [publish, setPublish] = useState<any>(published);
         const handleDeleteQuiz = () => {
             quizClient.deleteQuiz(quizId);
-            window.location.reload();
         }
-        const handlePublishQuiz = (bool: boolean) => {
-            quizClient.updateQuiz(quizId, { published: bool });
-            window.location.reload();
+        const handlePublishQuiz = async (bool: boolean) => {
+            const result = await quizClient.updateQuiz(quizId, { published: bool });
+            console.log(result);
+            if (result.modifiedCount === 1) {
+                setPublish(bool);
+            }
         }
         const navigate = useNavigate();
         const handleEditQuiz = () => {
@@ -22,7 +26,7 @@ export default function QuizLessonControlButtons({ courseId, quizId, published }
     return (
         <div>
             <div className="dropdown dropend float-end">
-                {published ? ( <GreenCheckmark /> ) : (<IoIosCloseCircle className="text-danger" />) }
+                {publish ? ( <GreenCheckmark /> ) : (<IoIosCloseCircle className="text-danger" />) }
                 <button
                     id="wd-quiz-lesson-control-btn"
                     className="btn border border-0"
@@ -44,7 +48,7 @@ export default function QuizLessonControlButtons({ courseId, quizId, published }
                             <FaTrash className="float-end" />
                         </button>
                     </li>
-                    {published ? (
+                    {publish ? (
                         <li>
                             <button className="dropdown-item" onClick={() => handlePublishQuiz(false)}>
                                 Unpublish
