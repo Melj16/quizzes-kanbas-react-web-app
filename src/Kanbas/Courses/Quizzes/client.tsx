@@ -27,3 +27,23 @@ export const getQuestions = async (quizId: string) => {
     const { data } = await axiosWithCredentials.get(`${QUIZ_API}/${quizId}/questions`);
     return data;
 }
+
+export const newAttempt = async (quizId: string, userId: string) => {
+    const { data } = await axiosWithCredentials.post(`${QUIZ_API}/${quizId}/user/${userId}/answers`);
+    return data;
+}
+
+export const submitQuiz = async (quizId: string, userId: string) => {
+    const { data } = await axiosWithCredentials.put(`${QUIZ_API}/${quizId}/user/${userId}/answers/finished`);
+    return data;
+}
+
+export const addAnswerToMap = async (quizId: string, userId: string, answer: any) => {
+    const { data } = await axiosWithCredentials.put(`${QUIZ_API}/${quizId}/user/${userId}/answer`, answer);
+    return data;
+}
+
+export const getAnswers = async (quizId: string, userId: string) => {
+    const { data } = await axiosWithCredentials.get(`${QUIZ_API}/${quizId}/user/${userId}/answers`);
+    return data;
+}

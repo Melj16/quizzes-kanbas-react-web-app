@@ -6,7 +6,7 @@ import * as quizClient from "./client";
 export default function DetailsEditor() {
     const { cid, qid } = useParams();
     const [loading, setLoading] = useState<boolean>(true);
-    const [quiz, setQuiz] = useState<any>(qid ? quizClient.getQuiz(qid) : {
+    const [quiz, setQuiz] = useState<any>(qid ? null : {
         name: "",
         type: "Graded Quiz",
         points: 0,
@@ -48,9 +48,10 @@ export default function DetailsEditor() {
         const fetchQuiz = async () => {
             if (qid) {
                 const fetchedQuiz = await quizClient.getQuiz(qid);
+                console.log(fetchedQuiz);
                 setQuiz(fetchedQuiz);
+                setLoading(false);
             }
-            setLoading(false);
         };
         fetchQuiz();
     }, [qid]);
@@ -111,7 +112,7 @@ export default function DetailsEditor() {
                     <div className="col px-0">
                         <b>Options</b>
                         <div className="form-check mt-3">
-                            <input className="form-check-input" type="checkbox" id="wd-shuffle-answers" defaultChecked name="shuffle_answers" value={quiz.shuffle_answers || ""} onChange={handleInputChange}/>
+                            <input className="form-check-input" type="checkbox" id="wd-shuffle-answers" defaultChecked name="shuffle_answers" checked={quiz.shuffle_answers || ""} onChange={handleInputChange}/>
                             <label className="form-check-label" htmlFor="wd-shuffle-answers">
                                 Shuffle Answers
                             </label>
@@ -129,7 +130,7 @@ export default function DetailsEditor() {
                 <div className="row form-group mb-3">
                     <div className="col col-4"></div>
                     <div className="col border py-2 rounded mt-3">
-                        <input className="form-check-input me-2" type="checkbox" id="wd-multiple-attempts" name="multiple_attempts" value={quiz.multiple_attempts || ""} onChange={handleInputChange}/>
+                        <input className="form-check-input me-2" type="checkbox" id="wd-multiple-attempts" name="multiple_attempts" checked={quiz.multiple_attempts || ""} onChange={handleInputChange}/>
                         <label className="form-check-label mb-3" htmlFor="wd-multiple-attempts">
                             Allow Multiple Attempts
                         </label>
@@ -140,7 +141,7 @@ export default function DetailsEditor() {
                         <input type="number" className="form-control mb-3" id="wd-number-of-attempts" placeholder="Number of Attempts" name="number_of_attempts" value={quiz.number_of_attempts || 1} onChange={handleInputChange}/>
                         </div>
                         <div className="mb-3">
-                            <input className="form-check-input me-2" type="checkbox" id="wd-show-correct-answers" name="show_answers" value={quiz.show_answers || ""} onChange={handleInputChange}/>
+                            <input className="form-check-input me-2" type="checkbox" id="wd-show-correct-answers" name="show_answers" checked={quiz.show_answers || ""} onChange={handleInputChange}/>
                             <label className="form-check-label" htmlFor="wd-show-correct-answers">
                                 Show Correct Answers
                             </label>
@@ -153,19 +154,19 @@ export default function DetailsEditor() {
                                 id="wd-quiz-access-code" placeholder="Access Code" name="access_code" value={quiz.access_code || ""} onChange={handleInputChange}/>
                         </div>
                         <div className="mb-3">
-                            <input className="form-check-input me-2" type="checkbox" id="wd-one-question-at-a-time" defaultChecked name="one_at_a_time" value={quiz.one_at_a_time || true} onChange={handleInputChange}/>
+                            <input className="form-check-input me-2" type="checkbox" id="wd-one-question-at-a-time" defaultChecked name="one_at_a_time" checked={quiz.one_at_a_time} onChange={handleInputChange}/>
                             <label className="form-check-label" htmlFor="wd-one-question-at-a-time">
                                 One Question at a Time
                             </label>
                         </div>
                         <div className="mb-3">
-                            <input className="form-check-input me-2" type="checkbox" id="wd-webcam-required" name="web_cam" value={quiz.web_cam || false} onChange={handleInputChange}/>
+                            <input className="form-check-input me-2" type="checkbox" id="wd-webcam-required" name="web_cam" checked={quiz.web_cam || false} onChange={handleInputChange}/>
                             <label className="form-check-label" htmlFor="wd-webcam-required">
                                 Webcam Required
                             </label>
                         </div>
                         <div className="mb-3">
-                            <input className="form-check-input me-2" type="checkbox" id="wd-lock-answers" name="lock_answers" value={quiz.lock_answers || false} onChange={handleInputChange}/>
+                            <input className="form-check-input me-2" type="checkbox" id="wd-lock-answers" name="lock_answers" checked={quiz.lock_answers || false} onChange={handleInputChange}/>
                             <label className="form-check-label" htmlFor="wd-lock-answers">
                                 Lock Questions After Answering
                             </label>

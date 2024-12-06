@@ -1,12 +1,32 @@
 import { FaPencilAlt } from "react-icons/fa";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useEffect, useState } from "react";
 import * as quizClient from "./client";
+import { useSelector } from "react-redux";
 
 export default function Details() {
     const { cid, qid } = useParams();
     const [quiz, setQuiz] = useState<any>(qid ? quizClient.getQuiz(qid) : null);
+    const { currentUser } = useSelector((state: any) => state.accountReducer);
+    const [answers, setAnswers] = useState<any>(null);
     const [loading, setLoading] = useState<boolean>(true);
+    const [maxAttempts, setMaxAttempts] = useState<boolean>(false);
+
+    const navigate = useNavigate();
+    const handleNewAttempt = async () => {
+        let result = null;
+        if (qid && currentUser._id) {
+            result = await quizClient.newAttempt(qid, currentUser._id);
+        } else {
+            return;
+        }
+        if (result) {
+            navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/view`);
+        } else {
+            setMaxAttempts(true);
+            return;
+        }
+    }
 
     useEffect(() => {
         const fetchQuiz = async () => {
@@ -14,10 +34,17 @@ export default function Details() {
                 const fetchedQuiz = await quizClient.getQuiz(qid);
                 setQuiz(fetchedQuiz);
             }
-            setLoading(false);
         };
+        const fetchAnswers = async () => {
+            if (qid && currentUser._id) {
+                const fetchedAnswers = await quizClient.getAnswers(qid, currentUser._id);
+                setAnswers(fetchedAnswers);
+                setLoading(false);
+            }
+        }
         fetchQuiz();
-    }, [qid]);
+        fetchAnswers();
+    }, [qid, currentUser._id]);
 
     if (loading) {
         return <div>Loading...</div>;
@@ -27,7 +54,28 @@ export default function Details() {
         return <div>Quiz not found</div>;
     }
 
+    const renderStudentView = () => {
+        return (
+            <div className="container m-0 fs-5 d-flex flex-column align-items-center">
+                <div className="row w-75 text-center">
+                    <h1>{quiz.name}</h1><br />
+                    <p>{quiz.instructions}</p>
+                    <p>{quiz.time_limit} minutes</p>
+                    <p>Points: {quiz.points}</p>
+                    <p>{quiz.number_of_attempts === 0 ? 
+                    `${answers.attempt || 0}/Unlimited Attempts` : 
+                    `${answers.attempt || 0}/${quiz.number_of_attempts} attempts`}</p>
+                    <button onClick={handleNewAttempt} className="btn btn-lg btn-danger border rounded-1 me-2">
+                        Begin Quiz
+                    </button>
+                    {maxAttempts && <p>Maximum attempts reached</p>}
+                </div>
+            </div>
+        )
+    }
+
     return (
+        (currentUser.role === "STUDENT") ? renderStudentView() :
         <div className="w-100">
             <div className="d-flex justify-content-center">
                 <a href={`#/Kanbas/Courses/${cid}/Quizzes/${qid}/view`}>
