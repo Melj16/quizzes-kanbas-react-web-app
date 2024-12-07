@@ -82,7 +82,7 @@ export default function Quizzes() {
                                     <p>
                                         <b>{checkAvailableDate(quiz.available, quiz.until)}</b>
                                          <b> Due</b> {new Date(new Date(quiz.due).setDate(new Date(quiz.due).getDate() + 1)).toDateString().split(' ').slice(1).join(' ')}
-                                         &nbsp;| {quiz.score ? `${quiz.score} / ${quiz.points}` : quiz.points} pts
+                                         &nbsp;| {quiz.show_answers && quiz.score ? `${quiz.score} / ${quiz.points}` : quiz.points} pts
                                         &nbsp;| {quiz.number_of_questions} questions
                                     </p>
                                 </div>

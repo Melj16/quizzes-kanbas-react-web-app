@@ -52,3 +52,8 @@ export const getAnswersForQuiz = async (quizId: string, userId: string) => {
     const { data } = await axiosWithCredentials.get(`${QUIZ_API}/${quizId}/user/${userId}/answers`);
     return data;
 }
+
+export const updateAnswer = async (quizId: string, userId: string, updateAnswer: any) => {
+    const { data } = await axiosWithCredentials.put(`${QUIZ_API}/${quizId}/user/${userId}/answers/update`, updateAnswer);
+    return data;
+}

@@ -20,13 +20,30 @@ export default function Details() {
         } else {
             return;
         }
+        console.log(result);
         if (result) {
+            setMaxAttempts(false);
             navigate(`/Kanbas/Courses/${cid}/Quizzes/${qid}/view`);
         } else {
             setMaxAttempts(true);
             return;
         }
     }
+
+    const checkAvailableDate = () => {
+        const currentDate = new Date();
+        const availableDate = new Date(quiz.available);
+        const untilDate = new Date(quiz.until);
+        if (availableDate > currentDate) {
+            return `Not available until ${availableDate.toDateString().split(' ').slice(1).join(' ')}`;
+        }
+        else if (untilDate < currentDate) {
+            return `Closed`;
+        }
+        else {
+            return "Begin Quiz";
+        }
+    };
 
     useEffect(() => {
         const fetchQuiz = async () => {
@@ -56,21 +73,35 @@ export default function Details() {
 
     const renderStudentView = () => {
         return (
-            <div className="container m-0 fs-5 d-flex flex-column align-items-center">
-                <div className="row w-75 text-center">
-                    <h1>{quiz.name}</h1><br />
-                    <p>{quiz.instructions}</p>
-                    <p>{quiz.time_limit} minutes</p>
-                    <p>Points: {quiz.points}</p>
-                    <p>{quiz.number_of_attempts === 0 ? 
-                    `${answers.attempt || 0}/Unlimited Attempts` : 
-                    `${answers.attempt || 0}/${quiz.number_of_attempts} attempts`}</p>
-                    <button onClick={handleNewAttempt} className="btn btn-lg btn-danger border rounded-1 me-2">
-                        Begin Quiz
-                    </button>
-                    {maxAttempts && <p>Maximum attempts reached</p>}
+                <div className="container m-0 fs-5 d-flex">
+                    <div className="row w-100">
+                        <div className="col-9 text-center">
+                            <div className="row w-100 text-center">
+                                <h1>{quiz.name}</h1><br />
+                                <p>{quiz.instructions}</p>
+                                <p>{quiz.time_limit} minutes</p>
+                                <p>Points: {quiz.points}</p>
+                                <p>{quiz.number_of_attempts === 0 ? 
+                                `${answers.attempt || 0}/Unlimited Attempts` : 
+                                `${answers.attempt || 0}/${quiz.number_of_attempts} attempts`}</p>
+                                <button onClick={handleNewAttempt} className="btn btn-lg btn-danger border rounded-1 me-2">
+                                    {checkAvailableDate()}
+                                </button>
+                                {maxAttempts && <p>Maximum attempts reached</p>}
+                            </div>
+                        </div>
+                        <div className="col-3 text-center">
+                            {quiz.show_answers ? (
+                            <>
+                                <h3>Grade: {answers.score}</h3>
+                                <a href={`#/Kanbas/Courses/${cid}/Quizzes/${qid}/Graded`} className="btn btn-link">Graded Quiz</a>
+                            </>
+                            ) : (
+                                answers.finished ? <h3>Quiz not graded</h3> : <h3>Quiz not finished</h3>
+                            )}
+                        </div>
+                    </div>
                 </div>
-            </div>
         )
     }
 

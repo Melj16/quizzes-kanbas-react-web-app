@@ -95,20 +95,21 @@ const handleInputChange = (
             case "Multiple Choice":
               return (
                 <ul className="options-list">
-                  {question.choices.map((choice: string, index: number) => (
-                    <li
-                      key={`${question._id}-choice-${index}`}
-                      className="option-item"
-                    >
-                      <input onChange={handleInputChange}
-                        type="radio"
-                        name={question._id}
-                        id={`option-${index}`}
-                        value={choice}
-                        className="radio-input"
-                      />
-                      <label htmlFor={`option-${index}`}>{choice}</label>
-                    </li>
+                  {(quiz.shuffle_answers ? question.choices.sort(() => Math.random() - 0.5) : question.choices)
+                  .map((choice: string, index: number) => (
+                  <li
+                  key={`${question._id}-choice-${index}`}
+                  className="option-item"
+                  >
+                  <input onChange={handleInputChange}
+                    type="radio"
+                    name={question._id}
+                    id={`option-${index}`}
+                    value={choice}
+                    className="radio-input"
+                  />
+                  <label htmlFor={`option-${index}`}>{choice}</label>
+                  </li>
                   ))}
                 </ul>
               );
@@ -119,7 +120,7 @@ const handleInputChange = (
                     <input onChange={handleInputChange}
                       type="radio"
                       name={question._id}
-                      value="true"
+                      value="True"
                       className="radio-input"
                     />
                     True
@@ -128,7 +129,7 @@ const handleInputChange = (
                     <input onChange={handleInputChange}
                       type="radio"
                       name={question._id}
-                      value="false"
+                      value="False"
                       className="radio-input"
                     />
                     False

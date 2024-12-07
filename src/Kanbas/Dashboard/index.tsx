@@ -97,7 +97,7 @@ export default function Dashboard({
                                             {course.name} </h5>
                                         <p className="wd-dashboard-course-title card-text overflow-y-hidden" style={{ maxHeight: 100 }}>
                                             {course.description} </p>
-                                        {(currentUser.role == "FACULTY" || course.enrolled || !enrolling) && (
+                                        {(currentUser.role === "FACULTY" || course.enrolled || !enrolling) && (
                                                 <button className="btn btn-primary"> Go </button>)
                                         }
                                         <ProtectedRole>
