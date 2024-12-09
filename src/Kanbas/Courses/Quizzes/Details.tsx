@@ -87,7 +87,7 @@ export default function Details() {
                                 <button onClick={handleNewAttempt} className="btn btn-lg btn-danger border rounded-1 me-2">
                                     {checkAvailableDate()}
                                 </button>
-                                {maxAttempts && <p>Maximum attempts reached</p>}
+                                {maxAttempts && <p>Quiz is closed</p>}
                             </div>
                         </div>
                         <div className="col-3 text-center">

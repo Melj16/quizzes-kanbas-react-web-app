@@ -87,7 +87,9 @@ export default function GradedQuiz() {
             <div key={question._id} className="question-card">
                 <div className="question-header">
                     <div className="question-title">Question {index + 1}</div>
-                    <div className="question-points">{question.points || 0} pts</div>
+                    <div className="question-points">{answers[question._id] === question.answer ? 
+                    `${question.points} / ${question.points}` : 
+                    `0 / ${question.points}`} pts</div>
                 </div>
                 <p className="question-text">
                     {question.question || "No question text available"}
@@ -172,6 +174,10 @@ export default function GradedQuiz() {
                                         value={answers[question._id]}
                                         disabled
                                     />
+                                    <div className="correct-answer-box">
+                                        <span className="correct-answer-label" style={{ color: 'green' }}>Correct Answer: </span>
+                                        <span className="correct-answer-text" style={{ color: 'green' }}>{question.answer}</span>
+                                    </div>
                                 </div>
                             );
                         default:
