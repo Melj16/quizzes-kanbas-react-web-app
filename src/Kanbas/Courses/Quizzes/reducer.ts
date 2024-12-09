@@ -30,7 +30,13 @@ const quizzesSlice = createSlice({
                 quiz.questions = [...quiz.questions, newQuestion];
             }
         },
+        deleteQuiz: (state, { payload: quizId }) => {
+            const quizIndex = state.quizzes.findIndex((q: any) => q._id === quizId);
+            if (quizIndex > -1) {
+                state.quizzes.splice(quizIndex, 1);
+            }
+        },
     },
 });
-export const { setQuizzes, createQuiz, createQuestion } = quizzesSlice.actions;
+export const { setQuizzes, createQuiz, createQuestion, deleteQuiz } = quizzesSlice.actions;
 export default quizzesSlice.reducer;

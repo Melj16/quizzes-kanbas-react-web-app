@@ -47,6 +47,9 @@ export default function DetailsEditor() {
 
                 setLoading(false);
             }
+            else {
+                setLoading(false);
+            }
         };
         fetchQuiz();
     }, [qid]);

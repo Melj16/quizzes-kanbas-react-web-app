@@ -5,11 +5,15 @@ import { IoIosCheckmarkCircle, IoIosCloseCircle } from "react-icons/io";
 import * as quizClient from "./client";
 import { useNavigate } from "react-router";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { deleteQuiz } from "./reducer";
 
 export default function QuizLessonControlButtons({ courseId, quizId, published }:
     { courseId: string; quizId: string; published: boolean }) {
         const [publish, setPublish] = useState<any>(published);
+        const dispatch = useDispatch();
         const handleDeleteQuiz = () => {
+            dispatch(deleteQuiz(quizId));
             quizClient.deleteQuiz(quizId);
         }
         const handlePublishQuiz = async (bool: boolean) => {

@@ -2,6 +2,7 @@ import { FaPlus } from "react-icons/fa";
 import { IoEllipsisVertical } from "react-icons/io5";
 import { useNavigate } from "react-router";
 import { useSelector } from "react-redux";
+import * as quizClient from "./client";
 
 interface QuizControlsProps {
     courseId: string;
@@ -10,8 +11,14 @@ interface QuizControlsProps {
 export default function QuizControls({ courseId }: QuizControlsProps) {
     const navigate = useNavigate();
     const { currentUser } = useSelector((state: any) => state.accountReducer);
-    const handleAddQuiz = () => {
-        navigate(`/Kanbas/Courses/${courseId}/Quizzes/new`);
+    const handleAddQuiz = async () => {
+        const newQuiz = {
+            name: "New Quiz",
+            points: 0
+        }
+        const createdQuiz = await quizClient.createQuiz(courseId, newQuiz);
+        navigate(`/Kanbas/Courses/${courseId}/Quizzes/${createdQuiz._id}`);
+        // navigate(`/Kanbas/Courses/${courseId}/Quizzes/new`);
     }
     return (
         <div id="wd-quiz-controls" className="text-nowrap">

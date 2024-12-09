@@ -13,6 +13,7 @@ import QuizDetails from "./Quizzes/Details";
 import QuizDetailsTabs from "./Quizzes/DetailsTabs";
 import QuizView from "./Quizzes/View";
 import GradedQuiz from "./Quizzes/GradedQuiz";
+import Create from "./Quizzes/Create";
 
 export default function Courses({ courses }: { courses: any[];}) {
     const { cid } = useParams();
