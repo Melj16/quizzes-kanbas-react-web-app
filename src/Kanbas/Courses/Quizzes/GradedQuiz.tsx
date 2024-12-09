@@ -87,7 +87,8 @@ export default function GradedQuiz() {
             <div key={question._id} className="question-card">
                 <div className="question-header">
                     <div className="question-title">Question {index + 1}</div>
-                    <div className="question-points">{answers[question._id] === question.answer ? 
+                    <div className="question-points">{(question.type === "Fill-in-the-Blank" ? question.choices.includes(answers[question._id]) :
+                    answers[question._id] === question.answer) ? 
                     `${question.points} / ${question.points}` : 
                     `0 / ${question.points}`} pts</div>
                 </div>
@@ -175,8 +176,12 @@ export default function GradedQuiz() {
                                         disabled
                                     />
                                     <div className="correct-answer-box">
-                                        <span className="correct-answer-label" style={{ color: 'green' }}>Correct Answer: </span>
-                                        <span className="correct-answer-text" style={{ color: 'green' }}>{question.answer}</span>
+                                        <span className="correct-answer-label" style={{ color: 'green' }}>Correct Answers: </span>
+                                        {question.choices.map((choice: string, index: number) => (
+                                            <div key={index} className="correct-answer-text" style={{ color: 'green' }}>
+                                                {choice}
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
                             );
