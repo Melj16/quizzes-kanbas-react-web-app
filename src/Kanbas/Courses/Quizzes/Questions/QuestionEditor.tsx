@@ -58,6 +58,14 @@ export default function QuestionEditor() {
         }
     };
 
+    const handleNewAnswer = (e: ChangeEvent<HTMLInputElement>) => {
+        if (editingQuestion) {
+            const updatedQuestion = { ...editingQuestion, answer: e.target.value };
+            setEditingQuestion(updatedQuestion);
+            dispatch(updateQuestion(updatedQuestion)); // Dispatch the updateQuestion action
+        }
+    }
+
     const handleRadioChange = (e: ChangeEvent<HTMLInputElement>, choice: string) => {
         if (editingQuestion) {
             const updatedQuestion = { ...editingQuestion, answer: choice };
@@ -242,26 +250,18 @@ export default function QuestionEditor() {
                                             </div>
                                         </div>
                                     )}
-                                    {question?.type === "Fill-in-the-Blank" && question.choices.map((choice: any, index: any) => (
-                                        <div key={index} className="input-group mb-2">
+                                    {question?.type === "Fill-in-the-Blank" &&
+                                        <div>
                                             <input
                                                 type="text"
                                                 className="form-control"
                                                 placeholder="Correct Answer"
-                                                value={choice}
-                                                name="choices"
-                                                onChange={(e) => handleChoiceInputChange(e, index)}
+                                                value={question.answer}
+                                                name="answer"
+                                                onChange={(e) => handleNewAnswer(e)}
                                             />
-                                            <button
-                                                type="button"
-                                                className="btn btn-danger"
-                                                onClick={() => handleDeleteChoice(index)}
-                                            >
-                                                <FaTrash />
-                                            </button>
-                                        </div>
-                                    ))}
-                                    {(question?.type === "Multiple Choice" || question?.type === "Fill-in-the-Blank") && (
+                                        </div>}
+                                    {(question?.type === "Multiple Choice") && (
                                         <a onClick={() => { handleAddChoice() }}
                                             className="float-end text-danger text-decoration-none d-flex align-items-center"
                                             style={{ cursor: "pointer" }}>

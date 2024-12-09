@@ -11,6 +11,8 @@ export default function Details() {
     const [answers, setAnswers] = useState<any>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [maxAttempts, setMaxAttempts] = useState<boolean>(false);
+    const [accessCode, setAccessCode] = useState<string>("");
+    const [isAuthorized, setIsAuthorized] = useState<boolean>(false);
 
     const navigate = useNavigate();
     const handleNewAttempt = async () => {
@@ -63,6 +65,14 @@ export default function Details() {
         fetchAnswers();
     }, [qid, currentUser._id]);
 
+    const handleAccessCodeSubmit = () => {
+        if (accessCode === quiz.access_code) {
+            setIsAuthorized(true);
+        } else {
+            alert("Incorrect access code");
+        }
+    };
+
     if (loading) {
         return <div>Loading...</div>;
     }
@@ -72,7 +82,9 @@ export default function Details() {
     }
 
     const renderStudentView = () => {
+        console.log("answers", answers);
         return (
+            !isAuthorized && quiz.access_code !== "" && answers === ""? renderAccessCode() : (
                 <div className="container m-0 fs-5 d-flex">
                     <div className="row w-100">
                         <div className="col-9 text-center">
@@ -102,9 +114,30 @@ export default function Details() {
                         </div>
                     </div>
                 </div>
-        )
+            )
+        );
     }
 
+    const renderAccessCode = () => {
+            return (
+                <div className="container m-0 fs-5 d-flex justify-content-center">
+                    <div className="row w-50">
+                        <div className="col text-center">
+                            <h1>Enter Access Code</h1>
+                            <input 
+                                type="text" 
+                                value={accessCode} 
+                                onChange={(e) => setAccessCode(e.target.value)} 
+                                className="form-control mb-3"
+                            />
+                            <button onClick={handleAccessCodeSubmit} className="btn btn-lg btn-primary">
+                                Submit
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
     return (
         (currentUser.role === "STUDENT") ? renderStudentView() :
         <div className="w-100">
