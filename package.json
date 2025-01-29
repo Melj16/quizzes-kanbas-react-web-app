@@ -54,6 +54,7 @@
     ]
   },
   "devDependencies": {
-    "@types/react-draft-wysiwyg": "^1.13.8"
+    "@types/react-draft-wysiwyg": "^1.13.8",
+    "@babel/plugin-proposal-private-property-in-object": "^7.16.7"
   }
 }
