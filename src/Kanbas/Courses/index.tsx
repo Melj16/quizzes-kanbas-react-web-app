@@ -17,7 +17,7 @@ import Create from "./Quizzes/Create";
 
 export default function Courses({ courses }: { courses: any[];}) {
     const { cid } = useParams();
-    const course = courses.find((course) => course._id === cid);
+    const course = courses.find((course) => course?._id === cid);
     const { pathname } = useLocation();
     return (
         <div id="wd-courses">
