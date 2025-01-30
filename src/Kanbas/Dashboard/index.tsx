@@ -77,6 +77,7 @@ export default function Dashboard({
             <div id="wd-dashboard-courses" className="row">
                 <div className="row row-cols-1 row-cols-md-5 g-4">
                     {courses.map((course) => (
+                        course && (
                         <div className="wd-dashboard-course col" style={{ width: "300px" }}>
                             <div className="card rounded-3 overflow-hidden">
                                 <Link to={(!enrolling || course.enrolled) ? `/Kanbas/Courses/${course?._id}/Home` : '/Kanbas/Dashboard'}
@@ -94,9 +95,9 @@ export default function Dashboard({
                                                     {course.enrolled ? "Unenroll" : "Enroll"}
                                                 </button>
                                             )}
-                                            {course.name} </h5>
+                                            {course?.name} </h5>
                                         <p className="wd-dashboard-course-title card-text overflow-y-hidden" style={{ maxHeight: 100 }}>
-                                            {course.description} </p>
+                                            {course?.description} </p>
                                         {(currentUser.role === "FACULTY" || course.enrolled || !enrolling) && (
                                                 <button className="btn btn-primary"> Go </button>)
                                         }
@@ -123,7 +124,7 @@ export default function Dashboard({
                                 </Link>
                             </div>
                         </div>
-                    ))}
+                    )))}
                 </div>
             </div >
         </div >);
