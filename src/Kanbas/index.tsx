@@ -17,7 +17,7 @@ export default function Kanbas() {
   const [enrolling, setEnrolling] = useState<boolean>(false);
   const findCoursesForUser = async () => {
     try {
-      const courses = await userClient.findCoursesForUser(currentUser._id);
+      const courses = await userClient.findCoursesForUser(currentUser?._id);
       setCourses(courses);
     } catch (error) {
       console.error(error);
@@ -25,13 +25,13 @@ export default function Kanbas() {
   };
   const updateEnrollment = async (courseId: string, enrolled: boolean) => {
     if (enrolled) {
-      await userClient.enrollIntoCourse(currentUser._id, courseId);
+      await userClient.enrollIntoCourse(currentUser?._id, courseId);
     } else {
-      await userClient.unenrollFromCourse(currentUser._id, courseId);
+      await userClient.unenrollFromCourse(currentUser?._id, courseId);
     }
     setCourses(
       courses.map((course) => {
-        if (course._id === courseId) {
+        if (course?._id === courseId) {
           return { ...course, enrolled: enrolled };
         } else {
           return course;
@@ -43,10 +43,10 @@ export default function Kanbas() {
     try {
       const allCourses = await courseClient.fetchAllCourses();
       const enrolledCourses = await userClient.findCoursesForUser(
-        currentUser._id
+        currentUser?._id
       );
       const courses = allCourses.map((course: any) => {
-        if (enrolledCourses.find((c: any) => c._id === course._id)) {
+        if (enrolledCourses.find((c: any) => c?._id === course?._id)) {
           return { ...course, enrolled: true };
         } else {
           return course;
